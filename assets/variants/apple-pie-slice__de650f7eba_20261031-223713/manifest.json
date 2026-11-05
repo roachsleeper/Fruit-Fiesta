@@ -1,0 +1,46 @@
+{
+  "reference": {
+    "original": "F:\\Fruit Fiesta\\assets\\reference\\apple-pie-slice__de650f7eba.png",
+    "backup": "F:\\Fruit Fiesta\\assets\\reference\\apple-pie-slice__de650f7eba__de650f7eba.png",
+    "sha256": "de650f7ebac073bd6cbd01aea836427f94e8618cc644d0852d21980c6b61fb94"
+  },
+  "params": {
+    "prompt": "pixel art apple pie slice, triangular wedge with lattice crust, one big bite taken out of the pointed end, exposed apple filling cross-section, dark brown outline, flat colors, 16-bit game item, white background",
+    "negative": "photo, 3d render, blurry, text, watermark, whole pie, uncut",
+    "denoise": 0.75,
+    "steps": 28,
+    "cfg": 6.5,
+    "lora": "PixelArtRedmond-Lite64.safetensors",
+    "lora_strength": 0.75,
+    "lock_palette": false,
+    "checkpoint": "DreamShaper_8_pruned.safetensors"
+  },
+  "variants": [
+    {
+      "seed": 16345288,
+      "file": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223713\\v1_seed16345288.png",
+      "file_1x": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223713\\v1_seed16345288-1x.png",
+      "sha256": "0d988d2685537671cce8764d2c20b9b1b67fa6b0ba79834ff9ba70ee32cc4a25"
+    },
+    {
+      "seed": 5025905,
+      "file": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223713\\v2_seed5025905.png",
+      "file_1x": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223713\\v2_seed5025905-1x.png",
+      "sha256": "7eb30c7363dba63261677749db82531060b8f01fe7616b120f3e4cf64d4d2eff"
+    },
+    {
+      "seed": 15941478,
+      "file": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223713\\v3_seed15941478.png",
+      "file_1x": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223713\\v3_seed15941478-1x.png",
+      "sha256": "763bfb7e64eb61fc6e8b5da9c122510125339e0e528463e012f5cd7f45b3abeb"
+    },
+    {
+      "seed": 6145475,
+      "file": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223713\\v4_seed6145475.png",
+      "file_1x": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223713\\v4_seed6145475-1x.png",
+      "sha256": "777ccc6fba968821d327fec8e9af0404d85d10ab2151e4f1831fce0a4ea61629"
+    }
+  ],
+  "created": "2026-10-31T22:37:13",
+  "reference_verified_after": "de650f7ebac073bd6cbd01aea836427f94e8618cc644d0852d21980c6b61fb94"
+}

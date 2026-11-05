@@ -1,0 +1,23 @@
+{
+  "operation": "bite",
+  "reference": {
+    "backup": "F:\\Fruit Fiesta\\assets\\reference\\apple-pie-slice__de650f7eba__de650f7eba.png",
+    "sha256": "de650f7ebac073bd6cbd01aea836427f94e8618cc644d0852d21980c6b61fb94",
+    "verified_after": "de650f7ebac073bd6cbd01aea836427f94e8618cc644d0852d21980c6b61fb94"
+  },
+  "params": {
+    "center": [
+      146.0,
+      91.0
+    ],
+    "radius": 42.0,
+    "block": 9,
+    "label": "bite-F",
+    "crumbs": false
+  },
+  "outputs": {
+    "png": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223342_bite-F\\bite-F.png",
+    "png_1x": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223342_bite-F\\bite-F-1x.png"
+  },
+  "created": "2026-10-31T22:33:42"
+}

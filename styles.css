@@ -1,0 +1,3836 @@
+@font-face {
+  font-family: 'ZhuoTeZiYouTi';
+  src: url('assets/fonts/ZhuoTeZiYouTi-2.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root { --ink:#2d2924; --paper:#fbf6e9; --cream:#f5ead0; --line:#dcc9a7; --green:#557850; --green-dark:#2e5146; --orange:#e77e4a; --orange-dark:#ad4c31; --yellow:#f1c766; --pixel:'ZhuoTeZiYouTi','Noto Sans SC',sans-serif; --body:'ZhuoTeZiYouTi','Noto Sans SC',sans-serif; }
+* { box-sizing:border-box; }
+html,body { margin:0; min-width:100%; min-height:100%; background:#142d2a; color:var(--ink); font-family:var(--body); }
+body { overflow-x:hidden; }
+button { border:0; color:inherit; font:inherit; cursor:pointer; }
+button:focus-visible { outline:3px solid #91b8df; outline-offset:3px; }
+.hidden { display:none !important; }
+
+.game-shell { position:relative; width:100vw; min-height:100dvh; overflow:hidden; background:#f6edda; }
+.screen-noise { position:absolute; z-index:20; inset:0; pointer-events:none; opacity:.06; background-image:radial-gradient(#2d2924 .7px,transparent .7px); background-size:5px 5px; mix-blend-mode:multiply; }
+.game-hud { position:absolute; z-index:30; top:0; left:0; right:0; min-height:72px; padding:15px clamp(16px,4vw,42px); display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:18px; background:linear-gradient(180deg,rgba(18,54,48,.94),rgba(18,54,48,.72),transparent); color:#fff5db; }
+.hud-brand { display:flex; align-items:center; gap:8px; line-height:1; }.hud-brand b,.hud-brand small{display:block}.hud-brand b{font-family:var(--pixel);font-size:15px;letter-spacing:1px}.hud-brand small{color:#b9d0a2;font-size:8px;letter-spacing:2px;margin-top:5px}.brand-leaf{width:25px;height:25px;display:grid;place-items:center;background:var(--yellow);color:var(--ink);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--ink);transform:rotate(45deg)}.brand-leaf::first-letter{transform:rotate(-45deg)}
+.journey-progress{display:flex;align-items:center;gap:7px}.journey-progress i{width:30px;height:1px;background:rgba(255,243,207,.4)}.progress-step{display:flex;align-items:center;gap:5px;color:rgba(255,245,219,.52);font-family:var(--pixel);font-size:9px;white-space:nowrap}.progress-step span{display:grid;place-items:center;width:23px;height:23px;border:1px solid rgba(255,245,219,.45);background:rgba(19,43,38,.5)}.progress-step.active{color:#fff4c8}.progress-step.active span{background:var(--orange);border-color:var(--ink);box-shadow:2px 2px 0 var(--ink)}
+.hud-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px}.hud-day{font-family:var(--pixel);font-size:9px;color:#dce9b8}.icon-button{width:30px;height:30px;background:rgba(255,248,225,.1);border:1px solid rgba(255,248,225,.35);color:#fff6d8;font-family:var(--pixel);font-size:17px}.icon-button:hover{background:var(--orange);color:#fff}.icon-button.muted{opacity:.45}
+
+.game-screen{position:relative;z-index:1;width:100%;min-height:100dvh;padding:88px clamp(16px,4vw,42px) 32px;background:linear-gradient(#86bba8 0 37%,#a7bd7a 37% 100%);}.game-screen:before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(34,82,72,.22),transparent 25%,rgba(45,76,48,.08));pointer-events:none}.scene{position:relative;z-index:2;width:min(100%,720px);margin:auto}.scene[hidden]{display:none}.scene-copy{color:#fff8df;text-shadow:2px 2px 0 rgba(40,56,38,.32);margin:0 auto 15px}.eyebrow{margin:0 0 4px;color:#ffdc8b;font-family:var(--pixel);font-size:10px;letter-spacing:1px}.scene-copy h1,.scene-copy h2{margin:0;font-family:var(--pixel);font-weight:400;letter-spacing:1px;font-size:clamp(23px,5vw,33px);line-height:1.25}.scene-copy h2{font-size:clamp(23px,5vw,30px)}.scene-subtitle{margin-top:7px;font-size:11px;color:rgba(255,249,223,.8)}
+
+.fruit-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px}.fruit-tab{min-height:57px;padding:8px 10px;display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:7px;background:rgba(255,248,221,.9);border:2px solid rgba(45,41,36,.85);box-shadow:3px 3px 0 rgba(45,41,36,.45);text-align:left}.fruit-tab.active{background:#fff5d7;border-color:#243e35;box-shadow:3px 3px 0 #243e35;transform:translateY(-2px)}.fruit-tab b,.fruit-tab small{display:block}.fruit-tab b{font-size:12px}.fruit-tab small{margin-top:2px;font-size:9px;color:#8e7960}.fruit-tab strong{align-self:start;color:var(--green-dark);font-family:var(--pixel);font-size:9px}.tab-fruit{width:27px;height:27px;display:block;position:relative}.apple-mini,.persimmon-mini{display:inline-block;position:relative;width:20px;height:20px}.apple-mini{background:#db5b3d;border:2px solid var(--ink);border-radius:48% 52% 50% 50%;box-shadow:inset 4px 0 #f58e5c,2px 2px 0 rgba(45,41,36,.2)}.apple-mini:before{content:'';position:absolute;top:-5px;right:-4px;width:7px;height:4px;background:var(--green);border:1px solid var(--ink);transform:rotate(-22deg)}.apple-mini:after{content:'';position:absolute;top:-5px;left:8px;width:3px;height:6px;background:#6f452e}.persimmon-mini{background:#e57642;border:2px solid var(--ink);border-radius:40% 40% 50% 50%;box-shadow:inset 4px 0 #f6a05a,2px 2px 0 rgba(45,41,36,.2)}.persimmon-mini:before{content:'✦';position:absolute;top:-11px;left:1px;color:var(--green-dark);font-size:14px}
+
+.orchard-card{overflow:hidden;background:#fff8e6;border:2px solid var(--ink);box-shadow:5px 5px 0 rgba(45,41,36,.45)}.world-label{display:flex;justify-content:space-between;padding:9px 12px 6px;font-family:var(--pixel);font-size:9px;color:#8d765a}.orchard-copy{display:flex;gap:6px;align-items:center;padding:0 12px 8px;font-size:11px;font-weight:700}.location-pin{color:var(--orange-dark);font-family:var(--pixel);font-size:18px;line-height:1}.orchard-world{height:min(55vh,360px);min-height:280px;position:relative;overflow:hidden;border-top:2px solid var(--ink);background:linear-gradient(#a8d2bf 0 50%,#8da86f 50% 67%,#668651 67%)}.apple-world{background:linear-gradient(#a8d2bf 0 50%,#8da86f 50% 67%,#668651 67%)}.persimmon-world{background:linear-gradient(#f5c687 0 50%,#c3a46d 50% 67%,#788b5d 67%)}.pixel-cloud{position:absolute;width:48px;height:14px;background:#fff5d8;opacity:.75;box-shadow:9px -8px 0 #fff5d8,26px -5px 0 #fff5d8,37px 3px 0 #fff5d8}.cloud-one{left:8%;top:31px}.cloud-two{right:8%;top:68px;transform:scale(.7)}
+.tree,.persimmon-tree{position:absolute;left:50%;top:34px;transform:translateX(-50%);width:260px;height:224px}.tree-trunk{position:absolute;bottom:8px;left:111px;width:39px;height:121px;background:#885338;border:3px solid var(--ink);box-shadow:inset 10px 0 #a56b42}.tree-trunk:before,.tree-trunk:after{content:'';position:absolute;width:80px;height:18px;background:#885338;border:3px solid var(--ink);top:16px}.tree-trunk:before{left:-63px;transform:rotate(-34deg)}.tree-trunk:after{right:-63px;transform:rotate(34deg)}.tree-crown,.persimmon-crown{position:absolute;width:197px;height:146px;left:31px;top:3px;background:#4d7b52;border:3px solid var(--ink);border-radius:44% 48% 40% 46%;box-shadow:inset 17px -11px 0 #6b9959,inset -15px 10px 0 #3e6849}.crown-back{top:0;left:20px;transform:scale(.87);background:#6c945f;border-color:#405842}.crown-front{top:21px;z-index:3}.fruit{position:absolute;z-index:5;padding:0;transition:transform .18s,opacity .25s}.fruit.caught{opacity:0;transform:translateY(45px) scale(.6);pointer-events:none}.apple-fruit{width:26px;height:26px;border:3px solid var(--ink);border-radius:48% 52% 50% 50%;background:#dc5e3c;box-shadow:inset 5px 0 #f18a58,2px 3px 0 rgba(42,31,21,.24)}.apple-fruit:before{content:'';position:absolute;top:-9px;left:10px;width:4px;height:9px;background:#6d452c}.apple-fruit:after{content:'';position:absolute;top:-9px;right:-6px;width:10px;height:5px;background:#6b9253;border:1px solid var(--ink);transform:rotate(-18deg)}.apple-one{top:61px;left:54px}.apple-two{top:105px;right:47px}.apple-three{top:45px;right:86px}.persimmon-fruit{width:29px;height:25px;border:3px solid var(--ink);border-radius:40% 40% 53% 53%;background:#e77942;box-shadow:inset 5px 0 #f4a252,2px 3px 0 rgba(42,31,21,.24)}.persimmon-fruit:before{content:'✦';color:#4f7547;position:absolute;font-size:19px;top:-18px;left:2px}.persimmon-one{top:57px;left:46px}.persimmon-two{top:99px;right:44px}.persimmon-three{top:39px;right:92px}.grass{position:absolute;left:0;width:100%}.grass-back{bottom:66px;height:35px;background:#769a60;clip-path:polygon(0 90%,7% 30%,12% 90%,20% 0,26% 90%,33% 35%,42% 90%,53% 5%,61% 90%,70% 30%,79% 90%,88% 0,94% 90%,100% 20%,100% 100%,0 100%)}.grass-front{bottom:0;height:76px;background:#6d8b50;clip-path:polygon(0 35%,10% 55%,17% 20%,26% 45%,34% 15%,44% 46%,56% 23%,65% 54%,73% 16%,85% 47%,94% 22%,100% 48%,100% 100%,0 100%)}.farm-sign{position:absolute;z-index:8;left:18px;bottom:24px;padding:7px;background:#d89055;color:#fff3cf;border:3px solid var(--ink);font-family:var(--pixel);font-size:11px;line-height:1.1;text-align:center;transform:rotate(-4deg);box-shadow:3px 3px 0 var(--ink)}.farm-sign small{font-size:6px}.persimmon-sign{background:#d46e43;transform:rotate(3deg)}
+
+.rope-origin{position:absolute;z-index:10;left:50%;bottom:8px;width:42px;height:20px;transform:translateX(-50%);background:#6d8156;border:3px solid var(--ink);border-radius:4px;box-shadow:3px 3px 0 rgba(42,31,21,.3),inset 0 0 0 3px #9fb477}.rope-origin:before{content:'';position:absolute;left:12px;top:-12px;width:12px;height:12px;background:#d49b4e;border:3px solid var(--ink)}.miner-rope{position:absolute;inset:0;z-index:9;pointer-events:none}.rope-line{position:absolute;top:18px;left:50%;width:100px;height:6px;background:repeating-linear-gradient(135deg,#70442c 0 4px,#c87e3c 4px 8px,#8e5430 8px 12px);border:1px solid var(--ink);border-radius:5px;transform-origin:0 50%;box-shadow:0 2px 0 rgba(42,31,21,.25),inset 0 1px 0 rgba(255,238,166,.38);pointer-events:none}.ring{position:absolute;z-index:11;top:-58px;left:calc(100% - 41px);width:82px;height:56px;padding:0;background:rgba(222,155,77,.08);border:3px solid var(--ink);border-radius:48% 52% 50% 50%;box-shadow:inset 0 0 0 4px #c87e3c,inset 0 0 0 7px #70442c,4px 5px 0 rgba(42,31,21,.25);cursor:pointer;pointer-events:auto;touch-action:manipulation;transform-origin:40px 56px;transform:rotate(var(--ring-angle,0deg))}.ring:before{content:'';position:absolute;left:31px;bottom:-5px;width:18px;height:14px;background:#c87e3c;border:3px solid var(--ink);border-top:0;border-radius:0 0 50% 50%}.ring:after{content:'';position:absolute;left:43px;bottom:-3px;width:25px;height:6px;background:#c87e3c;border:1px solid var(--ink);border-radius:3px;transform:rotate(-22deg);transform-origin:left center}.ring span{position:absolute;left:34px;bottom:-5px;width:11px;height:11px;background:#8e5430;border:2px solid var(--ink);border-radius:50%}.ring:active{transform:rotate(var(--ring-angle,0deg))}
+
+.pick-status{display:flex;align-items:center;gap:6px;min-height:38px;padding:8px 12px;background:#fff8e6;font-size:10px;color:var(--green-dark);font-weight:700}.status-dot{width:7px;height:7px;display:inline-block;background:var(--green);border:1px solid var(--ink)}.status-dot.orange{background:var(--orange)}.status-hint{margin-left:auto;color:#a18e75;font-weight:500}.hold-progress{height:5px;background:#eadfc9}.hold-progress-bar{height:100%;width:0;background:var(--orange);transition:width .05s linear}.scene-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px}.inventory-peek{display:flex;align-items:center;gap:7px;color:#fff7dc;font-size:11px;text-shadow:1px 1px 0 #3c5a43}.tiny-basket{display:grid;place-items:center;width:25px;height:22px;background:var(--yellow);color:#9c5b37;border:2px solid var(--ink);font-family:var(--pixel)}.primary-button{min-width:145px;padding:12px 15px;background:var(--green-dark);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);color:#fff8df;font-size:12px;font-weight:800}.primary-button:hover:not(:disabled){transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}.primary-button:disabled{opacity:.4;cursor:not-allowed}.primary-button span{margin-left:12px;font-family:var(--pixel);font-size:15px}
+
+.bottle{position:absolute;z-index:4;left:50%;bottom:17px;width:60px;height:92px;padding:0;background:transparent;transform:translateX(-50%);touch-action:none;cursor:grab}.bottle:active{cursor:grabbing}.bottle-neck{position:absolute;z-index:1;left:20px;top:0;width:20px;height:28px;background:#9dc3ae;border:3px solid var(--ink);border-bottom:0}.bottle-neck:before{content:'';position:absolute;left:-4px;top:-8px;width:22px;height:8px;background:#e7d49c;border:3px solid var(--ink)}.bottle-body{position:absolute;left:3px;bottom:0;width:54px;height:70px;overflow:hidden;border:4px solid var(--ink);border-radius:11px 11px 19px 19px;background:#a5d0bb;box-shadow:inset 0 0 0 5px rgba(255,248,209,.32),4px 4px 0 rgba(42,31,21,.24)}.bottle-body:after{content:'';position:absolute;left:7px;right:7px;bottom:12px;height:5px;background:rgba(76,111,83,.55);box-shadow:0 -15px 0 rgba(76,111,83,.3)}.bottle-body span{position:absolute;left:12px;top:21px;width:22px;height:18px;border:2px solid var(--ink);background:#f3c765;transform:rotate(-8deg)}.bottle.aligned{filter:drop-shadow(0 0 5px #f4d36e)}.bottle.holding{animation:bottle-bob .42s infinite alternate}@keyframes bottle-bob{to{transform:translateX(-50%) translateY(-4px)}}
+
+.scene-make,.scene-eat{color:var(--ink)}.scene-make .scene-copy,.scene-eat .scene-copy{color:#fff8df}.recipe-card{overflow:hidden;background:#fff8e6;border:2px solid var(--ink);box-shadow:5px 5px 0 rgba(45,41,36,.42)}.recipe-toolbar{display:flex;justify-content:space-between;padding:11px 14px 5px;color:#927c61;font-family:var(--pixel);font-size:9px}.recipe-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:7px 12px 12px}.recipe-tab{display:flex;align-items:center;gap:8px;padding:8px;background:#f4ecd9;border:1px solid var(--line);text-align:left}.recipe-tab.active{background:#fff5d7;border-color:var(--orange);box-shadow:2px 2px 0 #d97a4f}.recipe-tab b,.recipe-tab small{display:block}.recipe-tab b{font-size:11px}.recipe-tab small{margin-top:2px;color:#947d63;font-size:9px}.recipe-icon{width:30px;height:30px;display:block;flex:none}.apple-recipe-icon{background:#dc6847;border:3px solid var(--ink);border-radius:50%;box-shadow:inset 5px 0 #ef9362}.persimmon-recipe-icon{background:#e68143;border:3px solid var(--ink);border-radius:40%;box-shadow:inset 5px 0 #f3a157}.recipe-hero{position:relative;height:190px;overflow:hidden;border-top:2px solid var(--ink);background:linear-gradient(#bad9c0 0 58%,#a1bb80 58%)}.recipe-hero:after{content:'';position:absolute;bottom:19px;left:8%;right:8%;height:20px;background:#7e9465;clip-path:polygon(0 60%,15% 20%,28% 70%,43% 10%,57% 73%,70% 20%,83% 74%,100% 30%,100% 100%,0 100%)}.plate-shadow{position:absolute;bottom:16px;left:50%;width:170px;height:32px;transform:translateX(-50%);background:rgba(60,54,39,.2);border-radius:50%}.apple-pie{width:114px;height:67px;position:absolute;z-index:2;left:50%;bottom:38px;transform:translateX(-50%);border-radius:52% 52% 42% 42%;border:4px solid var(--ink);background:#d9894b;box-shadow:inset 0 -14px #c2683b,inset 14px 7px #f5c16a,5px 7px 0 rgba(47,39,28,.22)}.apple-pie:before{content:'';position:absolute;top:16px;left:13px;width:81px;height:5px;background:#9b4e31;transform:rotate(14deg);box-shadow:7px 13px 0 #9b4e31,-2px 25px 0 #9b4e31}.apple-pie:after{content:'';position:absolute;top:27px;left:7px;width:96px;height:5px;background:#9b4e31;transform:rotate(-20deg);box-shadow:5px 13px 0 #9b4e31}.apple-pie span,.apple-pie i,.apple-pie b{position:absolute;z-index:4;width:11px;height:11px;border-radius:50%;background:#dc5d3e;border:2px solid var(--ink)}.apple-pie span{top:10px;left:28px}.apple-pie i{top:20px;right:25px}.apple-pie b{bottom:9px;left:55px}.persimmon-jam{width:104px;height:86px;position:absolute;z-index:2;left:50%;bottom:34px;transform:translateX(-50%);border:4px solid var(--ink);border-radius:12px 12px 20px 20px;background:#e77a42;box-shadow:inset 12px 6px #f6ad5d,inset -10px -9px #c95436,5px 7px 0 rgba(47,39,28,.22)}.persimmon-jam:before{content:'';position:absolute;width:66px;height:17px;left:15px;top:-19px;background:#78945c;border:4px solid var(--ink);border-radius:4px;box-shadow:inset 0 -5px #afc875}.persimmon-jam:after{content:'柿';position:absolute;left:31px;top:27px;color:#fff1c3;font-family:var(--pixel);font-size:21px}.persimmon-jam span,.persimmon-jam i,.persimmon-jam b{display:none}.steam{position:absolute;z-index:5;width:12px;height:34px;border-left:3px solid rgba(255,255,255,.75);border-radius:50%;top:28px}.steam-a{left:41%;transform:rotate(13deg)}.steam-b{left:50%;top:16px;transform:rotate(-9deg)}.steam-c{left:60%;transform:rotate(19deg)}.ingredient-line{display:flex;align-items:center;gap:15px;padding:11px 14px 5px;color:#927c61;font-size:10px}.ingredient{display:inline-flex;align-items:center;gap:5px;padding:4px 6px;background:#f5ecda;border:1px solid #e4d5bb;font-size:9px}.ingredient i{width:12px;height:12px;display:inline-block}.ingredient .apple-mini{width:12px;height:12px;border-width:1px}.butter-dot{background:var(--yellow);border:1px solid var(--ink)}.make-stepper{display:flex;align-items:center;justify-content:center;gap:7px;margin:13px 13px 16px}.make-stepper i{width:34px;height:1px;background:var(--line)}.make-step{display:flex;align-items:center;gap:5px;color:#b5a58d;font-family:var(--pixel);font-size:10px}.make-step span{display:grid;place-items:center;width:20px;height:20px;border:1px solid #cbbda4}.make-step.active{color:var(--orange-dark)}.make-step.active span{background:var(--orange);color:#fff;border-color:var(--ink)}.wide{width:calc(100% - 28px);margin:0 14px 15px}.back-link{display:block;margin:15px auto 0;background:transparent;color:#fff4d0;font-family:var(--pixel);font-size:10px;text-shadow:1px 1px 0 #3c5a43}
+
+.eat-table{position:relative;height:min(52vh,390px);min-height:290px;overflow:hidden;background:#d69b61;border:2px solid var(--ink);box-shadow:5px 5px 0 rgba(45,41,36,.42)}.table-checker{position:absolute;inset:0;opacity:.17;background:repeating-linear-gradient(45deg,#fff2c9 0 12px,transparent 12px 24px)}.plate{position:absolute;top:50%;left:50%;width:min(70vw,280px);height:min(52vw,205px);transform:translate(-50%,-50%) rotate(-5deg);border:6px solid var(--ink);border-radius:50%;background:#fff4da;box-shadow:inset 0 0 0 7px #e8ceb0,6px 8px 0 rgba(69,46,25,.2)}.plate-rim{position:absolute;inset:19px;border:2px solid #d3ae82;border-radius:50%}.eaten-food{transition:opacity .3s}.eaten-food.bite-4{opacity:.18}.bite-mark{position:absolute;z-index:8;display:block;width:21px;height:21px;opacity:0;border:3px solid var(--ink);border-radius:50%;background:#fff4da;box-shadow:inset 0 0 0 2px #e8ceb0;transition:opacity .18s}.bite-one{top:4px;right:-9px}.bite-two{top:23px;right:-13px}.bite-three{top:43px;right:-9px}.bite-four{top:56px;right:9px}.eaten-food.bite-1 .bite-one,.eaten-food.bite-2 .bite-one,.eaten-food.bite-2 .bite-two,.eaten-food.bite-3 .bite-one,.eaten-food.bite-3 .bite-two,.eaten-food.bite-3 .bite-three,.eaten-food.bite-4 .bite-one,.eaten-food.bite-4 .bite-two,.eaten-food.bite-4 .bite-three,.eaten-food.bite-4 .bite-four{opacity:1}.fork,.spoon{position:absolute;color:var(--ink);font-family:var(--pixel);font-size:41px}.fork{left:22px;top:72px;transform:rotate(-18deg)}.spoon{right:22px;bottom:33px;transform:rotate(20deg)}.eat-spark{position:absolute;color:#fff3c4;font-family:var(--pixel)}.spark-a{top:29px;left:20%}.spark-b{right:20%;bottom:34px}.bite-panel{margin-top:15px;padding:13px 14px;background:#fff8e6;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(45,41,36,.42)}.bite-count{display:flex;align-items:center;gap:8px}.bite-count b{color:var(--orange-dark);font-family:var(--pixel);font-size:24px}.bite-count span{color:#927c61;font-size:10px;line-height:1.3}.bite-progress{height:7px;margin:9px 0 13px;background:#e9ddc6}.bite-progress div{width:100%;height:100%;background:var(--orange);transition:width .3s}.eat-button{width:100%;padding:11px;background:var(--orange);border:2px solid var(--ink);color:#fff;box-shadow:3px 3px 0 var(--ink);font-weight:800}.eat-button:hover{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}.eat-button span{margin-left:8px;color:#ffe49b}.finish-card{display:flex;align-items:center;gap:9px;margin-top:15px;padding:12px;background:#edf1d9;border:2px solid var(--green);box-shadow:3px 3px 0 rgba(45,41,36,.3)}.finish-icon{display:grid;place-items:center;width:30px;height:30px;background:var(--green);color:#fff;font-size:17px}.finish-card b,.finish-card div span{display:block}.finish-card b{font-size:11px}.finish-card div span{margin-top:3px;color:#927c61;font-size:9px}.small-button{margin-left:auto;padding:8px;background:transparent;color:var(--green-dark);border:1px solid var(--green);font-size:10px;white-space:nowrap}
+.toast{position:fixed;z-index:50;left:50%;bottom:23px;transform:translate(-50%,20px);padding:10px 14px;background:var(--ink);color:#fff6dc;font-size:11px;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:560px){.game-hud{grid-template-columns:1fr auto;gap:10px}.journey-progress{grid-column:1/-1;grid-row:2;justify-content:center;order:3;margin-top:-2px}.hud-day{display:none}.game-screen{padding-top:111px}.scene-copy{margin-bottom:12px}.orchard-world{height:48vh;min-height:270px}.fruit-tab{grid-template-columns:29px 1fr auto}.fruit-tab strong{font-size:8px}.recipe-hero{height:165px}.eat-table{height:45vh;min-height:270px}}
+@media (max-width:370px){.progress-step b{display:none}.journey-progress i{width:20px}.game-hud{padding-left:12px;padding-right:12px}.game-screen{padding-left:10px;padding-right:10px}.fruit-tab{padding:7px}.orchard-copy{font-size:10px}}
+
+/* 游戏舞台版排版：场景是主体，控件作为 HUD 叠加在场景上 */
+.game-screen { padding:0; min-height:100dvh; background:#86bba8; }
+.scene { width:100%; min-height:100dvh; margin:0; }
+.scene-pick { position:relative; overflow:hidden; }
+.scene-copy { position:absolute; z-index:24; top:94px; left:clamp(16px,5vw,48px); margin:0; }
+.scene-copy h1,.scene-copy h2 { font-size:clamp(21px,4vw,29px); }
+.scene-subtitle { display:none; }
+.fruit-tabs { position:absolute; z-index:27; top:95px; right:clamp(16px,5vw,48px); width:min(310px,42vw); margin:0; display:flex; gap:6px; }
+.fruit-tab { min-height:44px; flex:1; grid-template-columns:24px 1fr auto; gap:5px; padding:6px 7px; background:rgba(255,248,221,.9); box-shadow:2px 2px 0 rgba(45,41,36,.5); }
+.fruit-tab small { display:none; }.fruit-tab b { font-size:10px; white-space:nowrap; }.fruit-tab strong { font-size:8px; }.tab-fruit { width:21px; height:21px; transform:scale(.8); transform-origin:left center; }
+.orchard-card { position:absolute; z-index:1; inset:0; overflow:hidden; border:0; box-shadow:none; background:transparent; }
+.world-label { position:absolute; z-index:25; top:74px; left:clamp(16px,5vw,48px); right:clamp(16px,5vw,48px); padding:0; color:rgba(255,249,223,.76); text-shadow:1px 1px 0 rgba(47,76,56,.4); }
+.orchard-copy { position:absolute; z-index:25; top:145px; left:clamp(16px,5vw,48px); padding:7px 10px; background:rgba(24,58,50,.72); border:1px solid rgba(255,246,204,.65); color:#fff6d7; font-size:10px; }
+.orchard-world { position:absolute; inset:0; width:100%; height:100%; min-height:100dvh; border:0; }
+.tree,.persimmon-tree { top:25vh; transform:translateX(-50%) scale(var(--scene-scale,1.08)); transform-origin:top center; }
+.farm-sign { bottom:84px; }.rope-origin { bottom:56px; }.ring { z-index:12; }
+.pick-status { position:absolute; z-index:26; left:clamp(16px,5vw,48px); right:clamp(16px,5vw,48px); bottom:57px; min-height:32px; padding:7px 10px; background:rgba(24,58,50,.75); border:1px solid rgba(255,246,204,.6); color:#fff6d7; }
+.pick-status .status-hint { color:#d6e4b7; }.hold-progress { position:absolute; z-index:26; left:clamp(16px,5vw,48px); right:clamp(16px,5vw,48px); bottom:50px; height:5px; background:rgba(255,246,204,.35); }.hold-progress + .pick-status { bottom:57px; }
+.scene-footer { position:absolute; z-index:27; left:clamp(16px,5vw,48px); right:clamp(16px,5vw,48px); bottom:14px; margin:0; }
+.inventory-peek { color:#fff6d7; }.primary-button { padding:10px 13px; min-width:132px; }
+
+.scene-make,.scene-eat { padding:100px clamp(16px,5vw,48px) 28px; background:linear-gradient(#83b6a4,#9bb675); }
+.scene-make .scene-copy,.scene-eat .scene-copy { position:relative; top:auto; left:auto; width:min(100%,680px); margin:0 auto 14px; }
+.recipe-card { width:min(100%,760px); margin:0 auto; background:rgba(255,248,230,.94); }.recipe-hero { height:min(42vh,340px); }.recipe-hero .apple-pie,.recipe-hero .persimmon-jam { transform:translateX(-50%) scale(var(--food-scale,1)); transform-origin:center bottom; }
+.scene-eat .eat-table { width:min(100%,900px); margin:0 auto; height:min(62vh,560px); }.scene-eat .bite-panel,.scene-eat .finish-card { width:min(100%,900px); margin-left:auto; margin-right:auto; }.scene-eat .plate { width:min(70vw,420px); height:min(52vw,280px); }.scene-eat .eaten-food { transform:translateX(-50%) scale(var(--food-scale,1)); transform-origin:center bottom; }
+
+@media (max-width:560px){.game-hud{min-height:76px}.scene-copy{top:97px;left:14px}.scene-copy h1,.scene-copy h2{font-size:22px}.fruit-tabs{top:97px;right:14px;width:48vw;min-width:175px}.world-label{top:75px;left:14px;right:14px}.orchard-copy{top:142px;left:14px;right:14px;width:max-content;max-width:calc(100% - 28px)}.tree,.persimmon-tree{top:24vh;transform:translateX(-50%) scale(var(--scene-scale,.94))}.pick-status{left:14px;right:14px;bottom:59px}.hold-progress{left:14px;right:14px}.scene-footer{left:14px;right:14px}.scene-make,.scene-eat{padding:100px 14px 24px}}
+
+/* 教程是小型场景提示，不占用绳索活动区 */
+.orchard-copy { top:142px; left:clamp(16px,5vw,48px); right:auto; width:max-content; max-width:min(235px,calc(100% - 32px)); padding:5px 8px; background:rgba(24,58,50,.62); font-size:9px; line-height:1.25; pointer-events:none; }
+.orchard-copy .location-pin { font-size:14px; }
+@media (max-width:560px) { .orchard-copy { top:139px; left:14px; right:auto; max-width:220px; } }
+
+/* 最终游戏舞台覆盖：制作、食用不再使用网页卡片 */
+.orchard-copy { width:160px !important; max-width:160px !important; padding:4px 6px !important; font-size:8px !important; line-height:1.25 !important; white-space:normal !important; }
+.orchard-copy span:last-child { display:block; overflow:hidden; }
+
+.scene-make,.scene-eat { min-height:100dvh; padding-top:104px; padding-left:clamp(14px,5vw,56px); padding-right:clamp(14px,5vw,56px); background:linear-gradient(#78b0a1 0 42%,#91ad70 42% 100%); }
+.scene-make .scene-copy,.scene-eat .scene-copy { margin-bottom:12px; }
+.scene-make .recipe-card { width:100%; max-width:900px; margin:0 auto; overflow:visible; background:transparent; border:0; box-shadow:none; }
+.scene-make .recipe-toolbar { padding:0 0 8px; color:#fff5d5; text-shadow:1px 1px 0 #36584d; }
+.scene-make .recipe-tabs { width:min(100%,520px); margin:0 auto 10px; padding:0; }
+.scene-make .recipe-tab { background:rgba(255,248,230,.88); border:2px solid var(--ink); box-shadow:2px 2px 0 rgba(45,41,36,.4); }
+.scene-make .recipe-hero { width:100%; max-width:900px; height:min(43vh,370px); border:2px solid var(--ink); box-shadow:5px 5px 0 rgba(45,41,36,.36); background:linear-gradient(#b4d5ba 0 58%,#91ad70 58%); }
+.scene-make .ingredient-line { width:min(100%,900px); margin:10px auto 0; padding:8px 10px; background:rgba(24,58,50,.7); border:1px solid rgba(255,246,204,.55); color:#fff5d5; }
+.scene-make .make-stepper { width:min(100%,440px); margin:12px auto; padding:7px 10px; background:rgba(24,58,50,.65); border:1px solid rgba(255,246,204,.45); }
+.scene-make .wide { display:block; width:min(100%,420px); margin:0 auto; }
+.scene-make .back-link { margin-top:12px; }
+
+.scene-eat .eat-intro { display:none; }
+.scene-eat .eat-table { width:100%; max-width:1000px; height:min(72vh,650px); min-height:360px; margin:0 auto; border:2px solid var(--ink); box-shadow:6px 6px 0 rgba(45,41,36,.35); }
+.scene-eat .bite-panel { width:min(100%,900px); margin:14px auto 0; padding:10px 12px; background:rgba(24,58,50,.78); border:1px solid rgba(255,246,204,.55); box-shadow:none; color:#fff5d5; }
+.scene-eat .bite-count span { color:#dce9b8; }.scene-eat .bite-progress { background:rgba(255,246,204,.28); }.scene-eat .finish-card { width:min(100%,900px); margin:12px auto 0; background:rgba(237,241,217,.92); border:2px solid var(--ink); box-shadow:3px 3px 0 rgba(45,41,36,.3); }
+
+@media (max-width:560px) {
+  .orchard-copy { width:145px !important; max-width:145px !important; font-size:8px !important; }
+  .scene-make,.scene-eat { padding-top:101px; }
+  .scene-make .recipe-hero { height:35vh; min-height:235px; }
+  .scene-eat .eat-table { height:58vh; min-height:300px; }
+}
+
+/* 纯游戏模式：取消网页外壳，三个场景直接占满视口 */
+.game-hud { display:none !important; }
+.game-shell { width:100vw; height:100dvh; min-height:100dvh; overflow:hidden; background:#86bba8; }
+.game-screen { position:fixed; inset:0; width:100vw; height:100dvh; min-height:100dvh; padding:0; overflow:hidden; }
+.scene { position:absolute; inset:0; width:100vw; height:100dvh; min-height:100dvh; padding:0; overflow:hidden; }
+.scene-copy { top:18px !important; left:18px !important; margin:0 !important; z-index:30; }
+.scene-copy h1,.scene-copy h2 { font-size:20px !important; text-shadow:2px 2px 0 rgba(40,56,38,.4); }
+.scene-copy .eyebrow { font-size:9px; }.scene-copy .scene-subtitle { display:none; }
+.fruit-tabs { top:16px !important; right:16px !important; left:auto !important; bottom:auto !important; width:230px !important; margin:0 !important; z-index:32; }
+.fruit-tab { min-height:38px; padding:5px 6px; box-shadow:2px 2px 0 rgba(45,41,36,.45); }.fruit-tab b{font-size:9px}.fruit-tab strong{font-size:7px}.fruit-tab .tab-fruit{transform:scale(.72)}
+.orchard-card { position:absolute; inset:0; width:100%; height:100%; }
+.world-label,.orchard-copy { display:none !important; }
+.orchard-world { position:absolute; inset:0; width:100%; height:100%; min-height:100dvh; }
+.tree,.persimmon-tree { top:26vh; }
+.farm-sign { bottom:88px; }.rope-origin { bottom:60px; }
+.pick-status { left:50% !important; right:auto !important; bottom:61px !important; width:max-content; max-width:calc(100% - 32px); transform:translateX(-50%); min-height:28px; padding:5px 9px; border:1px solid rgba(255,246,204,.45); background:rgba(24,58,50,.62); font-size:9px; white-space:nowrap; }
+.hold-progress { left:16px !important; right:16px !important; bottom:53px !important; }
+.scene-footer { left:16px !important; right:16px !important; bottom:14px !important; }
+.scene-make,.scene-eat { padding:18px 16px 18px !important; background:linear-gradient(#78b0a1 0 43%,#91ad70 43% 100%); }
+.scene-make .scene-copy,.scene-eat .scene-copy { top:18px !important; left:18px !important; }
+.scene-make .recipe-card { position:absolute; inset:70px 16px 16px; width:auto; max-width:none; overflow:visible; }
+.scene-make .recipe-toolbar { display:none; }.scene-make .recipe-tabs { position:absolute; top:0; right:0; width:230px; margin:0; z-index:3; }.scene-make .recipe-hero { position:absolute; inset:50px 0 91px; width:100%; max-width:none; height:auto; }.scene-make .ingredient-line { position:absolute; left:0; right:0; bottom:59px; width:100%; margin:0; }.scene-make .make-stepper { position:absolute; left:0; right:0; bottom:29px; width:100%; margin:0; }.scene-make .wide { position:absolute; left:0; right:0; bottom:0; width:100%; margin:0; }.scene-make .back-link { position:absolute; left:18px; bottom:6px; z-index:5; margin:0; font-size:9px; }
+.scene-eat { display:flex; flex-direction:column; justify-content:flex-end; padding-bottom:16px !important; }.scene-eat .scene-copy { flex:none; }.scene-eat .eat-intro { display:block; position:absolute; top:18px; left:18px; margin:0; }.scene-eat .eat-table { flex:none; width:100%; max-width:none; height:calc(100dvh - 175px); min-height:0; margin:0 0 10px; }.scene-eat .bite-panel { flex:none; width:100%; margin:0; padding:8px 10px; }.scene-eat .finish-card { flex:none; width:100%; margin:8px 0 0; }
+@media (max-width:560px) { .fruit-tabs{width:205px !important}.scene-copy{left:14px !important}.tree,.persimmon-tree{top:25vh}.pick-status{bottom:62px !important}.scene-make .recipe-card{inset:68px 12px 12px}.scene-make .recipe-tabs{width:205px}.scene-eat .eat-table{height:calc(100dvh - 180px)} }
+
+/* 最终游戏排版：三个场景是连续的游戏舞台，不使用网页卡片容器 */
+.scene-pick,
+.scene-make,
+.scene-eat {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* 摘取：标题、果树、工具和操作提示分布在同一张果园画面上 */
+.scene-pick {
+  background: linear-gradient(180deg, #87c2af 0 48%, #9bb878 48% 69%, #6e8e55 69% 100%);
+}
+.scene-pick::after,
+.scene-make::after,
+.scene-eat::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(42, 57, 41, .18) .7px, transparent .7px);
+  background-size: 6px 6px;
+  opacity: .35;
+}
+.scene-pick .scene-copy,
+.scene-make .scene-copy,
+.scene-eat .scene-copy {
+  position: absolute;
+  z-index: 31;
+  top: 5.5vh !important;
+  left: 5vw !important;
+  margin: 0 !important;
+  width: auto;
+}
+.scene-pick .scene-copy h1,
+.scene-make .scene-copy h2,
+.scene-eat .scene-copy h2 {
+  font-size: clamp(21px, 3.2vw, 32px) !important;
+  letter-spacing: 1px;
+}
+.scene-pick .scene-copy .scene-subtitle,
+.scene-make .scene-copy .scene-subtitle,
+.scene-eat .scene-copy .scene-subtitle { display: none; }
+
+.scene-pick .fruit-tabs {
+  position: absolute;
+  z-index: 32;
+  top: 5.5vh !important;
+  right: 5vw !important;
+  left: auto !important;
+  width: auto !important;
+  display: flex;
+  gap: 18px;
+  margin: 0 !important;
+}
+.scene-pick .fruit-tab {
+  display: flex;
+  min-height: 0;
+  align-items: center;
+  gap: 7px;
+  padding: 0 0 6px;
+  color: rgba(255, 248, 221, .62);
+  background: transparent !important;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  box-shadow: none !important;
+  transform: none !important;
+  text-align: left;
+}
+.scene-pick .fruit-tab.active {
+  color: #fff5cb;
+  border-bottom-color: #f1c766;
+}
+.scene-pick .fruit-tab b { font-size: 11px; }
+.scene-pick .fruit-tab small { display: none; }
+.scene-pick .fruit-tab strong { font-size: 8px; color: inherit; }
+.scene-pick .fruit-tab .tab-fruit { transform: scale(.78); transform-origin: center; }
+
+.scene-pick .orchard-card {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.scene-pick .orchard-world {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+  border: 0;
+  background: transparent;
+}
+.scene-pick .orchard-world::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 49%;
+  height: 2px;
+  background: rgba(42, 57, 41, .22);
+}
+.scene-pick .tree,
+.scene-pick .persimmon-tree {
+  top: 22vh;
+  transform: translateX(-50%) scale(1.08);
+  transform-origin: center top;
+}
+.scene-pick .farm-sign { left: 5vw; bottom: 17vh; }
+.scene-pick .rope-origin { bottom: 7vh; }
+.scene-pick .pick-status {
+  position: absolute;
+  z-index: 27;
+  left: 5vw !important;
+  right: auto !important;
+  bottom: 11vh !important;
+  width: auto;
+  min-height: 0;
+  padding: 0;
+  color: #fff6d7;
+  background: transparent;
+  border: 0;
+  font-size: 10px;
+  text-shadow: 1px 1px 0 #36584d;
+  transform: none;
+  white-space: nowrap;
+}
+.scene-pick .pick-status .status-hint { display: none; }
+.scene-pick .hold-progress {
+  position: absolute;
+  z-index: 27;
+  left: 5vw !important;
+  right: 5vw !important;
+  bottom: 10vh !important;
+  height: 4px;
+  background: rgba(255, 246, 204, .35);
+}
+.scene-pick .scene-footer {
+  position: absolute;
+  z-index: 28;
+  left: 5vw !important;
+  right: 5vw !important;
+  bottom: 3.5vh !important;
+  margin: 0;
+}
+.scene-pick .inventory-peek {
+  font-size: 10px;
+  color: #fff6d7;
+}
+.scene-pick .primary-button {
+  min-width: 136px;
+  padding: 9px 12px;
+  font-size: 11px;
+}
+
+/* 制作：把厨房当作完整场景，食物是舞台中心，配方和步骤是悬浮游戏控件 */
+.scene-make {
+  background: linear-gradient(180deg, #79b5a3 0 55%, #b0784d 55% 100%) !important;
+}
+.scene-make .recipe-card {
+  position: static;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+  overflow: visible;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.scene-make .recipe-toolbar { display: none; }
+.scene-make .recipe-tabs {
+  position: absolute;
+  z-index: 32;
+  top: 5.5vh;
+  right: 5vw;
+  width: auto;
+  display: flex;
+  gap: 18px;
+  padding: 0;
+  margin: 0;
+}
+.scene-make .recipe-tab {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 0 0 6px;
+  color: rgba(255, 248, 221, .66);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+}
+.scene-make .recipe-tab.active {
+  color: #fff5cb;
+  border-bottom-color: #f1c766;
+  box-shadow: none;
+}
+.scene-make .recipe-tab small { display: none; }
+.scene-make .recipe-tab b { font-size: 11px; }
+.scene-make .recipe-icon { width: 18px; height: 18px; border-width: 2px; }
+.scene-make .recipe-hero {
+  position: absolute;
+  z-index: 3;
+  top: 23vh;
+  left: 8vw;
+  right: 8vw;
+  width: auto;
+  height: 49vh;
+  max-width: none;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+.scene-make .recipe-hero::before {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  height: 34%;
+  background: #bd8555;
+  border-top: 3px solid #392f27;
+  box-shadow: 0 7px 0 rgba(49, 38, 29, .22);
+}
+.scene-make .recipe-hero::after { bottom: 14%; }
+.scene-make .recipe-hero .apple-pie,
+.scene-make .recipe-hero .persimmon-jam {
+  transform: translateX(-50%) scale(1.25);
+  transform-origin: center bottom;
+}
+.scene-make .ingredient-line {
+  position: absolute;
+  z-index: 4;
+  left: 5vw;
+  bottom: 10vh;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  color: #fff5d5;
+  background: transparent;
+  border: 0;
+}
+.scene-make .ingredient-line > span { display: none; }
+.scene-make .ingredient { background: transparent; border: 0; padding: 0; color: #fff5d5; }
+.scene-make .make-stepper {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 10vh;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  transform: translateX(-50%);
+}
+.scene-make .make-step { color: rgba(255, 247, 213, .58); }
+.scene-make .make-step.active { color: #fff5cb; }
+.scene-make .make-stepper i { background: rgba(255, 247, 213, .45); }
+.scene-make .wide {
+  position: absolute;
+  z-index: 5;
+  right: 5vw;
+  bottom: 6vh;
+  width: auto;
+  min-width: 170px;
+  margin: 0;
+  padding: 10px 14px;
+}
+.scene-make .back-link {
+  position: absolute;
+  z-index: 5;
+  left: 5vw;
+  bottom: 6vh;
+  margin: 0;
+}
+
+/* 食用：餐桌是整个场景，不再放进一张卡片里 */
+.scene-eat {
+  background: linear-gradient(180deg, #8ebfae 0 22%, #c78e59 22% 100%) !important;
+}
+.scene-eat .eat-table {
+  position: absolute;
+  z-index: 2;
+  inset: 22vh 0 14vh;
+  width: auto;
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+  background: #c78e59;
+}
+.scene-eat .table-checker { opacity: .2; }
+.scene-eat .plate {
+  width: min(54vw, 390px);
+  height: min(40vw, 260px);
+}
+.scene-eat .bite-panel {
+  position: absolute;
+  z-index: 8;
+  left: 5vw;
+  right: 5vw;
+  bottom: 4.5vh;
+  width: auto;
+  display: grid;
+  grid-template-columns: auto minmax(90px, 1fr) auto;
+  align-items: center;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+  color: #fff5d5;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.scene-eat .bite-count span { color: #fff5d5; }
+.scene-eat .bite-progress { margin: 0; background: rgba(255, 246, 204, .35); }
+.scene-eat .eat-button { width: auto; min-width: 150px; padding: 9px 13px; }
+.scene-eat .finish-card {
+  position: absolute;
+  z-index: 20;
+  top: 50%;
+  left: 50%;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 620px) {
+  .scene-pick .scene-copy,
+  .scene-make .scene-copy,
+  .scene-eat .scene-copy { top: 4vh !important; left: 4vw !important; }
+  .scene-pick .fruit-tabs,
+  .scene-make .recipe-tabs { top: 4vh; right: 4vw; gap: 10px; }
+  .scene-pick .fruit-tab b,
+  .scene-make .recipe-tab b { font-size: 9px; }
+  .scene-pick .fruit-tab strong { font-size: 7px; }
+  .scene-pick .tree,
+  .scene-pick .persimmon-tree { top: 20vh; transform: translateX(-50%) scale(.95); }
+  .scene-pick .farm-sign { bottom: 18vh; }
+  .scene-pick .rope-origin { bottom: 8vh; }
+  .scene-pick .pick-status { left: 4vw !important; bottom: 12vh !important; }
+  .scene-pick .hold-progress { left: 4vw !important; right: 4vw !important; bottom: 11vh !important; }
+  .scene-pick .scene-footer { left: 4vw !important; right: 4vw !important; bottom: 3vh !important; }
+  .scene-make .recipe-hero { top: 21vh; left: 3vw; right: 3vw; height: 51vh; }
+  .scene-make .recipe-hero .apple-pie,
+  .scene-make .recipe-hero .persimmon-jam { transform: translateX(-50%) scale(1.05); }
+  .scene-make .ingredient-line { left: 4vw; bottom: 12vh; }
+  .scene-make .make-stepper { bottom: 8vh; }
+  .scene-make .wide { right: 4vw; bottom: 3vh; min-width: 145px; }
+  .scene-make .back-link { left: 4vw; bottom: 3vh; font-size: 9px; }
+  .scene-eat .eat-table { inset: 20vh 0 16vh; }
+  .scene-eat .plate { width: 72vw; height: 50vw; }
+  .scene-eat .bite-panel { left: 4vw; right: 4vw; bottom: 3vh; grid-template-columns: auto 1fr; gap: 7px 10px; }
+  .scene-eat .bite-progress { grid-column: 1 / -1; grid-row: 2; }
+  .scene-eat .eat-button { justify-self: end; min-width: 132px; }
+}
+
+/* 交互修正：留出清晰的回退路径，避免制作页控件互相覆盖 */
+.scene-make .recipe-tabs {
+  top: 12vh;
+  left: 5vw;
+  right: 5vw;
+  width: auto;
+  justify-content: flex-end;
+}
+.scene-make .recipe-hero {
+  top: 19vh;
+  height: 55vh;
+}
+.scene-make .ingredient-line {
+  bottom: 19vh;
+}
+.scene-make .make-stepper {
+  left: 5vw;
+  right: 5vw;
+  bottom: 12vh;
+  justify-content: center;
+  transform: none;
+}
+.scene-make .wide,
+.scene-make .back-link {
+  bottom: 3vh;
+}
+.scene-make .wide {
+  left: auto !important;
+  right: 5vw;
+  width: auto !important;
+}
+.scene-make .back-link {
+  left: 5vw;
+}
+
+/* 食用页的餐桌从顶端开始，标题直接压在场景上，不留下无意义的色带 */
+.scene-eat {
+  background: #c78e59 !important;
+}
+.scene-eat .eat-table {
+  inset: 0 0 14vh;
+  background: #c78e59;
+}
+.scene-eat .scene-copy {
+  color: #fff8df;
+}
+.scene-eat .scene-back {
+  position: absolute;
+  z-index: 9;
+  left: 5vw;
+  bottom: 10vh;
+  margin: 0;
+}
+
+@media (max-width: 620px) {
+  .scene-make .recipe-tabs { top: 11vh; left: 4vw; right: 4vw; width: auto; justify-content: flex-end; }
+  .scene-make .recipe-hero { top: 17vh; height: 54vh; }
+  .scene-make .ingredient-line { bottom: 20vh; }
+  .scene-make .make-stepper { left: 4vw; right: 4vw; bottom: 13vh; }
+  .scene-make .wide,
+  .scene-make .back-link { bottom: 2.5vh; }
+  .scene-eat .eat-table { inset: 0 0 17vh; }
+  .scene-eat .scene-back { left: 4vw; bottom: 11vh; }
+}
+
+/* 制作步骤动画：每次点击推进时播放一次，保持像素风的分段动作 */
+.scene-make .recipe-hero .apple-pie,
+.scene-make .recipe-hero .persimmon-jam {
+  --food-zoom: 1.25;
+}
+.scene-make.making-now .make-step.active {
+  animation: make-step-light .62s steps(3, end);
+}
+.scene-make.making-now[data-make-step="1"] .ingredient {
+  animation: ingredient-drop .7s steps(4, end);
+}
+.falling-ingredient {
+  --drop-distance: clamp(140px, 24vh, 220px);
+  position: absolute;
+  z-index: 9;
+  top: 4%;
+  left: 50%;
+  width: 34px;
+  height: 34px;
+  opacity: 0;
+  pointer-events: none;
+}
+.falling-ingredient span {
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  width: 25px;
+  height: 25px;
+  display: block;
+  border: 3px solid var(--ink);
+  box-shadow: inset 5px 0 rgba(255, 255, 255, .18), 2px 3px 0 rgba(42, 31, 21, .24);
+}
+.falling-ingredient.drop-apple span {
+  border-radius: 48% 52% 50% 50%;
+  background: #dc5e3c;
+}
+.falling-ingredient.drop-apple span::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: -10px;
+  width: 4px;
+  height: 10px;
+  background: #6d452c;
+}
+.falling-ingredient.drop-apple span::after {
+  content: '';
+  position: absolute;
+  right: -7px;
+  top: -9px;
+  width: 10px;
+  height: 5px;
+  background: #6b9253;
+  border: 1px solid var(--ink);
+  transform: rotate(-18deg);
+}
+.falling-ingredient.drop-persimmon span {
+  border-radius: 40% 40% 53% 53%;
+  background: #e77942;
+}
+.falling-ingredient.drop-persimmon span::before {
+  content: '✦';
+  position: absolute;
+  left: 1px;
+  top: -19px;
+  color: #4f7547;
+  font-size: 19px;
+}
+.scene-make.making-now[data-make-step="1"] .falling-ingredient {
+  animation: ingredient-to-pan .82s steps(6, end);
+}
+.scene-make.making-now[data-make-step="1"] .recipe-hero .apple-pie,
+.scene-make.making-now[data-make-step="1"] .recipe-hero .persimmon-jam {
+  animation: food-drop .7s steps(4, end);
+}
+.scene-make.making-now[data-make-step="2"] .recipe-hero .apple-pie,
+.scene-make.making-now[data-make-step="2"] .recipe-hero .persimmon-jam {
+  animation: food-stir .72s steps(6, end);
+}
+.scene-make.making-now[data-make-step="2"] .steam {
+  animation: steam-rise .9s steps(5, end);
+}
+.scene-make.making-now[data-make-step="3"] .recipe-hero .apple-pie,
+.scene-make.making-now[data-make-step="3"] .recipe-hero .persimmon-jam {
+  animation: food-finish .7s steps(4, end);
+}
+.scene-make.making-now[data-make-step="3"] .plate-shadow {
+  animation: plate-shine .7s steps(3, end);
+}
+
+@keyframes make-step-light {
+  0%, 100% { filter: none; }
+  45% { filter: drop-shadow(0 0 5px #f4d36e); }
+}
+@keyframes ingredient-drop {
+  0% { transform: translateY(-17px); opacity: .2; }
+  55% { transform: translateY(3px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes food-drop {
+  0% { transform: translate(-50%, -26px) scale(var(--food-zoom, 1.25)); opacity: .5; }
+  60% { transform: translate(-50%, 4px) scale(var(--food-zoom, 1.25)); }
+  100% { transform: translate(-50%, 0) scale(var(--food-zoom, 1.25)); opacity: 1; }
+}
+@keyframes ingredient-to-pan {
+  0% { opacity: 1; transform: translate(-50%, 0) rotate(-8deg); }
+  24% { opacity: 1; transform: translate(-50%, calc(var(--drop-distance) * .22)) rotate(7deg); }
+  72% { opacity: 1; transform: translate(-50%, var(--drop-distance)) rotate(-4deg); }
+  100% { opacity: 0; transform: translate(-50%, calc(var(--drop-distance) + 18px)) scale(.7); }
+}
+@keyframes food-stir {
+  0%, 100% { transform: translateX(-50%) rotate(0) scale(var(--food-zoom, 1.25)); }
+  25% { transform: translateX(calc(-50% - 8px)) rotate(-4deg) scale(var(--food-zoom, 1.25)); }
+  75% { transform: translateX(calc(-50% + 8px)) rotate(4deg) scale(var(--food-zoom, 1.25)); }
+}
+@keyframes steam-rise {
+  0% { opacity: 0; transform: translateY(12px); }
+  50% { opacity: .9; }
+  100% { opacity: .15; transform: translateY(-17px); }
+}
+@keyframes food-finish {
+  0% { transform: translateX(-50%) scale(calc(var(--food-zoom, 1.25) * .82)); }
+  60% { transform: translateX(-50%) scale(calc(var(--food-zoom, 1.25) * 1.08)); }
+  100% { transform: translateX(-50%) scale(var(--food-zoom, 1.25)); }
+}
+@keyframes plate-shine {
+  0%, 100% { opacity: .2; transform: translateX(-50%) scaleX(1); }
+  50% { opacity: .42; transform: translateX(-50%) scaleX(1.12); }
+}
+
+@media (max-width: 620px) {
+  .scene-make .recipe-hero .apple-pie,
+  .scene-make .recipe-hero .persimmon-jam { --food-zoom: 1.05; }
+}
+
+/* 摘取场景素材版：草原背景图 + 像素果树 + 苹果图标 */
+.scene-pick {
+  background-color: #93a878;
+  background-image: url('orchard-field.png');
+  background-repeat: repeat-x;
+  background-position: center top;
+  background-size: auto 112vh;
+}
+.scene-pick .orchard-world,
+.scene-pick .apple-world,
+.scene-pick .persimmon-world {
+  background: transparent !important;
+}
+.scene-pick .orchard-world::before { display: none; }
+.scene-pick .pixel-cloud,
+.scene-pick .grass { display: none; }
+
+.orchard-trees {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bg-tree {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  aspect-ratio: 806 / 1010;
+  transform: translateX(-50%);
+  opacity: var(--o, .9);
+  filter: saturate(.9) brightness(1.03);
+}
+.bg-tree::before {
+  content: '';
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: 0;
+  height: 4%;
+  background: rgba(43, 63, 35, .18);
+  border-radius: 50%;
+}
+.bg-tree img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.bg-tree i {
+  position: absolute;
+  width: 9%;
+  aspect-ratio: 498 / 555;
+  background: url('apple-fruit.png') center / contain no-repeat;
+  filter: drop-shadow(1px 1px 0 rgba(45, 41, 36, .16));
+}
+.bg-tree i:nth-of-type(1) { left: 27%; top: 36%; }
+.bg-tree i:nth-of-type(2) { left: 57%; top: 30%; }
+.bg-tree i:nth-of-type(3) { left: 45%; top: 49%; }
+.bg-tree-1 { --x: 4%; --y: 28%; --w: clamp(76px, 8.5vw, 124px); --o: .9; }
+.bg-tree-2 { --x: 17%; --y: 22%; --w: clamp(50px, 5.8vw, 82px); --o: .78; transform: translateX(-50%) scaleX(-1); }
+.bg-tree-3 { --x: 80%; --y: 25%; --w: clamp(66px, 7.4vw, 106px); --o: .88; }
+.bg-tree-4 { --x: 98%; --y: 31%; --w: clamp(88px, 9.8vw, 136px); --o: .94; filter: saturate(.82) brightness(1.05) hue-rotate(6deg); }
+.bg-tree-5 { --x: 37%; --y: 19%; --w: clamp(46px, 5.2vw, 74px); --o: .72; transform: translateX(-50%) scaleX(-1); }
+.bg-tree-6 { --x: 64%; --y: 18%; --w: clamp(50px, 5.6vw, 80px); --o: .78; }
+
+.scene-pick .tree,
+.scene-pick .persimmon-tree {
+  top: 16vh;
+  z-index: 3;
+  width: min(46vw, 23vh, 195px);
+  height: auto;
+  aspect-ratio: 806 / 1010;
+  transform: translateX(-50%) scale(calc(var(--scene-scale, 1.08) * var(--tree-variant-scale, 1)));
+  transform-origin: center top;
+  transition: opacity .26s ease, scale .26s ease, translate .26s ease;
+}
+.scene-pick .tree.tree-leaving {
+  opacity: 0;
+  scale: .94;
+  translate: 0 -8px;
+}
+.scene-pick .tree.tree-arriving {
+  animation: tree-arrive .5s cubic-bezier(.2, .9, .3, 1.25);
+}
+@keyframes tree-arrive {
+  0% { opacity: 0; scale: .9; translate: 0 16px; }
+  55% { opacity: 1; scale: 1.02; translate: 0 -3px; }
+  100% { opacity: 1; scale: 1; translate: 0 0; }
+}
+.scene-pick .tree-variant-1 { --tree-variant-scale: 1; }
+.scene-pick .tree-variant-2 { --tree-variant-scale: .96; }
+.scene-pick .tree-variant-3 { --tree-variant-scale: 1.03; }
+.scene-pick .tree-variant-2 .tree-sprite { transform: scaleX(-1); filter: hue-rotate(-7deg) saturate(1.08); }
+.scene-pick .tree-variant-3 .tree-sprite { filter: hue-rotate(5deg) saturate(1.08) brightness(1.02); }
+.scene-pick .tree::after,
+.scene-pick .persimmon-tree::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  left: 14%;
+  right: 14%;
+  bottom: 1.5%;
+  height: 5%;
+  background: rgba(43, 63, 35, .2);
+  border-radius: 50%;
+  filter: blur(1px);
+}
+.tree-sprite {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.persimmon-tree-sprite {
+  filter: sepia(.22) hue-rotate(-26deg) saturate(1.3) brightness(1.02);
+}
+.scene-pick .persimmon-world {
+  background: linear-gradient(180deg, rgba(244, 192, 110, .1), rgba(197, 131, 60, .1)) !important;
+}
+
+.scene-pick .apple-fruit {
+  z-index: 6;
+  width: calc(12% * var(--apple-s, 1));
+  height: auto;
+  aspect-ratio: 498 / 555;
+  left: var(--apple-x, 50%);
+  top: var(--apple-y, 50%);
+  right: auto;
+  border: 0;
+  border-radius: 0;
+  background: url('apple-fruit.png') center / contain no-repeat;
+  box-shadow: none;
+  filter: drop-shadow(2px 3px 0 rgba(45, 41, 36, .22));
+}
+.scene-pick .apple-fruit::before,
+.scene-pick .apple-fruit::after { content: none; }
+
+.scene-pick .persimmon-one { top: 36%; left: 16%; right: auto; }
+.scene-pick .persimmon-two { top: 55%; left: 66%; right: auto; }
+.scene-pick .persimmon-three { top: 22%; left: 49%; right: auto; }
+
+.scene-pick .scene-copy { color: #2f4632; text-shadow: none; }
+.scene-pick .scene-copy h1 {
+  color: #2c4029;
+  text-shadow: 2px 2px 0 rgba(255, 246, 209, .62);
+}
+.scene-pick .scene-copy .eyebrow { color: #7c6a34; }
+.scene-pick .fruit-tab { color: rgba(47, 68, 48, .6); }
+.scene-pick .fruit-tab.active { color: #2e5146; border-bottom-color: #5f7f47; }
+.scene-pick .fruit-tab strong { color: inherit; }
+
+.scene-pick .pick-status {
+  padding: 6px 10px !important;
+  background: rgba(32, 59, 47, .8) !important;
+  border: 1px solid rgba(255, 246, 204, .38) !important;
+  color: #fff6d7 !important;
+  text-shadow: none;
+}
+.scene-pick .inventory-peek { text-shadow: 1px 1px 0 #2e5146; }
+.scene-pick .ring,
+.scene-pick .ring:active {
+  transform: rotate(var(--ring-angle, 0deg)) scale(.8);
+}
+
+/* 苹果图标同步替换到标签和食材提示里 */
+.apple-mini {
+  background: url('apple-fruit.png') center / contain no-repeat;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.apple-mini::before,
+.apple-mini::after { content: none; }
+
+
+@media (max-width: 620px) {
+  .scene-pick .tree,
+  .scene-pick .persimmon-tree {
+    top: 16vh;
+    width: min(46vw, 23vh, 195px);
+  }
+  .scene-pick .pick-status { bottom: 11vh !important; }
+}
+@media (max-width: 420px) {
+  .scene-pick .scene-copy h1 { font-size: 19px !important; letter-spacing: 0; }
+}
+@media (max-width: 380px) {
+  .scene-pick .fruit-tabs { top: 12vh !important; }
+}
+
+
+/* ========== 制作站：六味调料 + 苹果，拖入中央碗中按配比合成 ========== */
+.scene-make .scene-copy { max-width: 62vw; }
+.scene-make .scene-copy h2 { text-shadow: 2px 2px 0 rgba(40, 56, 38, .35); }
+
+.make-stage {
+  position: absolute;
+  z-index: 6;
+  top: 12vh;
+  left: 5vw;
+  right: 5vw;
+  bottom: 10vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-areas: "bowl" "pantry";
+  gap: clamp(8px, 1.4vh, 16px);
+  pointer-events: none;
+}
+.make-stage > * { pointer-events: auto; }
+
+.bowl-zone {
+  grid-area: bowl;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+.bowl-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  color: #fff6d7;
+  font-size: 10px;
+  font-weight: 700;
+  text-shadow: 1px 1px 0 #36584d;
+  text-align: center;
+}
+.bowl-drop {
+  position: relative;
+  width: min(78%, 420px);
+  aspect-ratio: 420 / 221;
+  touch-action: none;
+  transition: transform .16s steps(2, end);
+}
+.bowl-drop::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 1%;
+  width: 76%;
+  height: 12%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(45, 30, 18, .3) 0%, rgba(45, 30, 18, .16) 48%, transparent 72%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.bowl-image {
+  position: relative;
+  z-index: 3;
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  -webkit-user-drag: none;
+  user-select: none;
+  filter: drop-shadow(0 8px 0 rgba(34, 45, 34, .16));
+  transition: filter .16s steps(2, end), transform .16s steps(2, end);
+}
+.bowl-mix {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  clip-path: ellipse(42% 24% at 50% 55%);
+  background: radial-gradient(ellipse at 50% 42%, #fffdf4 0%, #f7f0df 58%, #e3d9c5 100%);
+  box-shadow: inset 0 -12px 18px rgba(121, 95, 61, .16);
+  pointer-events: none;
+}
+.bowl-soup {
+  position: absolute;
+  left: 50%;
+  top: 53%;
+  width: 66%;
+  height: 38%;
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(var(--soup-scale, .6));
+  filter: blur(2px) saturate(1.05);
+  transition: opacity .2s linear;
+}
+.bowl-bits { position: absolute; inset: 0; }
+.bowl-bit {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: clamp(8px, 1.35vw, 13px);
+  height: clamp(8px, 1.35vw, 13px);
+  border: 1px solid rgba(45, 41, 36, .75);
+  border-radius: 2px 3px 2px 3px;
+  background: var(--bit);
+  box-shadow: inset 2px 0 rgba(255, 255, 255, .35), 1px 2px 0 rgba(45, 41, 36, .25);
+  transform: translate(-50%, -50%) rotate(var(--rot));
+  animation: bit-pop .24s steps(3, end);
+}
+.bowl-drop.drop-active { transform: translateY(-2px) scale(1.015); }
+.bowl-drop.drop-active .bowl-image {
+  filter: drop-shadow(0 0 0 #ffe49a) drop-shadow(0 0 16px #ffe49a) drop-shadow(0 8px 0 rgba(34, 45, 34, .16));
+}
+.drop-cue {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 12%;
+  padding: 4px 8px;
+  color: #49382a;
+  background: #ffe7a1;
+  border: 2px solid var(--ink);
+  box-shadow: 2px 2px 0 rgba(45, 41, 36, .35);
+  font-size: 9px;
+  font-weight: 800;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -6px);
+  transition: opacity .14s, transform .14s steps(2, end);
+  pointer-events: none;
+}
+.bowl-drop.drop-active .drop-cue { opacity: 1; transform: translate(-50%, 0); }
+
+.mix-spark {
+  position: absolute;
+  z-index: 4;
+  color: #fff0a8;
+  font-family: var(--pixel);
+  opacity: 0;
+  pointer-events: none;
+  text-shadow: 1px 1px 0 #9b6a2f;
+}
+.mix-spark-a { left: 8%; top: 20%; font-size: 20px; }
+.mix-spark-b { right: 9%; top: 12%; font-size: 16px; }
+.mix-spark-c { right: 17%; bottom: 17%; font-size: 22px; }
+
+.bowl-tally {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  width: min(92%, 460px);
+  min-height: 25px;
+  margin-top: 10px;
+}
+.bowl-empty-text {
+  color: rgba(255, 246, 215, .7);
+  font-size: 9px;
+  text-shadow: 1px 1px 0 #36584d;
+}
+.tally-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  color: #4a3a2b;
+  background: rgba(255, 248, 226, .94);
+  border: 1px solid var(--ink);
+  box-shadow: 2px 2px 0 rgba(45, 41, 36, .3);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+}
+.tally-chip:hover { background: #ffe9b2; }
+.tally-chip i {
+  width: 9px;
+  height: 9px;
+  background: var(--chip);
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+}
+.tally-chip b { font-family: var(--pixel); font-size: 9px; }
+
+.bowl-nearest {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 22px;
+  margin-top: 7px;
+  padding: 3px 8px;
+  color: #fff5d5;
+  background: rgba(24, 58, 50, .58);
+  border: 1px solid rgba(255, 246, 204, .42);
+  font-size: 9px;
+  line-height: 1.2;
+}
+.bowl-nearest span {
+  padding: 1px 4px;
+  color: #5a432c;
+  background: var(--yellow);
+  font-family: var(--pixel);
+  font-size: 8px;
+  font-weight: 700;
+}
+.bowl-nearest b { font-weight: 700; }
+.bowl-nearest.is-near { background: rgba(173, 76, 49, .82); border-color: rgba(255, 226, 153, .7); }
+
+.pantry {
+  grid-area: pantry;
+  align-self: end;
+  padding: 8px 10px 10px;
+  color: #fff5d5;
+  background: rgba(24, 58, 50, .64);
+  border: 1px solid rgba(255, 246, 204, .5);
+  box-shadow: 0 4px 0 rgba(23, 45, 37, .18);
+}
+.pantry-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 7px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .5px;
+}
+.pantry-head small { color: #d4e3b7; font-size: 8px; font-weight: 500; }
+.pantry-tools { display: flex; align-items: center; gap: 8px; }
+.clear-bowl {
+  padding: 2px 6px;
+  color: #fff5d5;
+  background: rgba(255, 246, 204, .08);
+  border: 1px solid rgba(255, 246, 204, .45);
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.clear-bowl:hover { background: var(--orange-dark); }
+.pantry-items {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+.ingredient-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  padding: 4px 3px 4px;
+  color: #46372a;
+  background: rgba(255, 248, 230, .95);
+  border: 2px solid rgba(45, 41, 36, .88);
+  box-shadow: 2px 2px 0 rgba(45, 41, 36, .4);
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: transform .12s steps(2, end), background .12s;
+}
+.ingredient-card:hover { background: #fff6d5; transform: translateY(-2px); }
+.ingredient-card:active { transform: translateY(1px); }
+.ingredient-card.dragging { opacity: .28; }
+.ingredient-card.card-apple { background: #fff0cd; border-color: #7e3d2b; }
+.ingredient-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: clamp(28px, 5.4vh, 52px);
+}
+.ingredient-thumb img {
+  display: block;
+  max-width: 92%;
+  max-height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(1px 2px 0 rgba(45, 41, 36, .2));
+}
+.ingredient-name { font-size: 9px; font-weight: 800; line-height: 1; }
+.ingredient-role { color: #8c765c; font-size: 7px; line-height: 1; }
+.ingredient-amount {
+  position: absolute;
+  z-index: 2;
+  top: -7px;
+  right: -6px;
+  display: grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 3px;
+  color: #fff8e6;
+  background: var(--orange);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  font-family: var(--pixel);
+  font-size: 8px;
+  line-height: 1;
+  opacity: 0;
+  transform: scale(.55);
+  transition: opacity .12s, transform .12s steps(2, end);
+}
+.ingredient-card.has-count .ingredient-amount { opacity: 1; transform: scale(1); }
+
+.recipe-fab {
+  display: none;
+  position: absolute;
+  z-index: 48;
+  top: 5.5vh;
+  right: 5vw;
+  padding: 6px 9px;
+  color: #fff4cb;
+  background: rgba(24, 58, 50, .78);
+  border: 1px solid rgba(255, 246, 204, .65);
+  box-shadow: 2px 2px 0 rgba(24, 40, 34, .35);
+  font-size: 9px;
+  font-weight: 700;
+}
+.recipe-fab[aria-expanded="true"] { background: var(--orange-dark); }
+
+.recipe-book {
+  position: absolute;
+  z-index: 46;
+  top: 50%;
+  right: 0;
+  width: 270px;
+  max-width: 270px;
+  max-height: calc(100dvh - 190px);
+  overflow-y: auto;
+  transform: translateY(-50%) rotate(.5deg);
+  padding: 10px 10px 9px;
+  background: #fff8e6;
+  border: 2px solid var(--ink);
+  box-shadow: 5px 5px 0 rgba(45, 41, 36, .32);
+}
+.recipe-backdrop {
+  display: none;
+  position: absolute;
+  z-index: 44;
+  inset: 0;
+  background: rgba(16, 40, 35, .5);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity .16s linear;
+}
+.recipe-book-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed #c9b18d;
+  color: #6f5a42;
+  font-family: var(--pixel);
+  font-size: 10px;
+}
+.recipe-book-head small { color: #9b8568; font-family: var(--body); font-size: 7px; }
+.recipe-book-list { display: flex; flex-direction: column; gap: 5px; margin-top: 7px; }
+.recipe-hint {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 6px;
+  align-items: start;
+  padding: 5px 6px;
+  background: rgba(244, 236, 217, .66);
+  border: 1px solid transparent;
+}
+.recipe-hint.is-closest {
+  background: #fff2c9;
+  border-color: var(--orange);
+  box-shadow: 2px 2px 0 rgba(173, 76, 49, .26);
+}
+.recipe-hint.has-thumb { grid-template-columns: 20px 38px minmax(0, 1fr); align-items: center; }
+.hint-thumb {
+  display: block;
+  width: 38px;
+  height: 30px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(1px 2px 0 rgba(45, 41, 36, .22));
+  -webkit-user-drag: none;
+}
+.hint-thumb-locked {
+  display: grid;
+  place-items: center;
+  background: #efe3c8;
+  border: 1px dashed #c2ac88;
+  color: #9b8568;
+  font-family: var(--pixel);
+  font-size: 17px;
+  line-height: 1;
+  filter: none;
+}
+.recipe-hint.is-locked .hint-name { color: #8f7a60; letter-spacing: 2px; }
+.recipe-hint.is-locked .hint-ratio { opacity: .86; }
+.hint-index {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  color: #fff6d7;
+  background: var(--green-dark);
+  font-family: var(--pixel);
+  font-size: 8px;
+}
+.hint-name { display: block; font-size: 10px; font-weight: 800; line-height: 1.2; }
+.hint-ratio { display: flex; flex-wrap: wrap; gap: 3px 6px; margin-top: 3px; }
+.hint-chip { display: inline-flex; align-items: center; gap: 2px; color: #7b664e; font-size: 8px; white-space: nowrap; }
+.hint-chip i { width: 6px; height: 6px; background: var(--chip); border: 1px solid var(--ink); border-radius: 1px; }
+.recipe-book-note { margin: 7px 0 0; color: #8c7a63; font-size: 8px; line-height: 1.45; }
+
+.make-actions {
+  position: absolute;
+  z-index: 12;
+  left: 5vw;
+  right: 5vw;
+  bottom: 3vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.scene-make .make-actions .back-link {
+  position: static;
+  left: auto;
+  bottom: auto;
+  margin: 0;
+  font-size: 10px;
+}
+.make-cta { min-width: 170px; padding: 10px 15px; }
+.make-cta.ready {
+  background: #b95a34;
+  animation: cta-ready 1.2s steps(2, end) infinite alternate;
+}
+.make-cta.mixing { opacity: .72; pointer-events: none; }
+
+.drag-ghost {
+  position: fixed;
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(-4deg);
+  filter: drop-shadow(3px 5px 0 rgba(35, 40, 33, .28));
+}
+.drag-ghost img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.drag-ghost span {
+  margin-top: 2px;
+  padding: 2px 5px;
+  color: #fff6d8;
+  background: var(--green-dark);
+  border: 1px solid var(--ink);
+  font-size: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.float-note {
+  position: absolute;
+  z-index: 8;
+  color: #fff0a8;
+  font-family: var(--pixel);
+  font-size: 16px;
+  text-shadow: 1px 1px 0 #8d5b27;
+  pointer-events: none;
+  animation: float-up .7s steps(5, end) forwards;
+}
+
+/* 合成结果 */
+.mix-result {
+  position: absolute;
+  z-index: 70;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+.mix-result.hidden { display: none; }
+.mix-result-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 45, 39, .64);
+  backdrop-filter: blur(2px);
+}
+.mix-result-card {
+  position: relative;
+  outline: none;
+  width: min(92vw, 420px);
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  padding: 16px 18px 16px;
+  background: #fff8e6;
+  border: 3px solid var(--ink);
+  box-shadow: 7px 7px 0 rgba(20, 35, 30, .45);
+  text-align: center;
+  animation: result-in .34s steps(4, end);
+}
+.mix-result-kicker {
+  margin: 0;
+  color: var(--orange-dark);
+  font-family: var(--pixel);
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+.mix-result-close {
+  position: absolute;
+  z-index: 2;
+  top: 7px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  color: #6c5842;
+  background: #f0e3c8;
+  border: 1px solid var(--ink);
+  font-family: var(--pixel);
+  font-size: 14px;
+}
+.mix-result-close:hover { color: #fff; background: var(--orange-dark); }
+.mix-result-badge {
+  position: relative;
+  width: min(62vw, 190px);
+  aspect-ratio: 420 / 221;
+  margin: 9px auto 8px;
+}
+.mix-result-badge img {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 5px 0 rgba(45, 41, 36, .16));
+}
+.result-soup {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 49%;
+  width: 70%;
+  height: 44%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  filter: blur(1.5px);
+}
+.mix-result-card h3 {
+  margin: 0;
+  font-family: var(--pixel);
+  font-size: clamp(18px, 4.4vw, 24px);
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+.mix-result-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+  color: #d99b32;
+  font-family: var(--pixel);
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+.mix-result-score b { color: #7c674c; font-size: 9px; letter-spacing: 0; }
+.mix-result-desc {
+  margin: 8px auto 0;
+  max-width: 290px;
+  color: #77644d;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.mix-result-ratio {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 9px;
+}
+.result-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 6px;
+  color: #584731;
+  background: #f3e7cc;
+  border: 1px solid #cbb088;
+  font-size: 8px;
+  font-weight: 700;
+}
+.result-chip i { width: 7px; height: 7px; background: var(--chip); border: 1px solid var(--ink); border-radius: 1px; }
+.mix-result-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.ghost-button {
+  padding: 9px 12px;
+  color: #5d4b37;
+  background: #f2e6cd;
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 rgba(45, 41, 36, .3);
+  font-size: 10px;
+  font-weight: 800;
+}
+.ghost-button:hover { background: #ffe9b2; transform: translate(1px, 1px); box-shadow: 2px 2px 0 rgba(45, 41, 36, .3); }
+.mix-result-actions .primary-button { min-width: 0; padding: 9px 12px; font-size: 10px; }
+.mix-result-actions .primary-button span { margin-left: 6px; font-size: 12px; }
+
+/* 合成中的碗与蒸汽 */
+.bowl-drop.is-mixing .bowl-image { animation: bowl-shake .18s steps(2, end) infinite; }
+.bowl-drop.is-mixing .mix-spark { animation: mix-sparkle .75s steps(4, end) infinite; }
+.bowl-drop.is-mixing .mix-spark-b { animation-delay: .18s; }
+.bowl-drop.is-mixing .mix-spark-c { animation-delay: .34s; }
+.bowl-drop.is-mixing .bowl-soup { animation: soup-spin .8s linear infinite; }
+
+@keyframes bit-pop {
+  0% { opacity: 0; transform: translate(-50%, -130%) scale(.5) rotate(var(--rot)); }
+  70% { opacity: 1; transform: translate(-50%, -50%) scale(1.12) rotate(var(--rot)); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(var(--rot)); }
+}
+@keyframes cta-ready {
+  from { filter: none; }
+  to { filter: drop-shadow(0 0 6px #ffe49a); }
+}
+@keyframes float-up {
+  0% { opacity: 0; transform: translate(-50%, 4px) scale(.7); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -38px) scale(1.1); }
+}
+@keyframes result-in {
+  0% { opacity: 0; transform: translateY(20px) scale(.92); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes bowl-shake {
+  0%, 100% { transform: translate(0, 0); }
+  30% { transform: translate(-3px, 1px) rotate(-.6deg); }
+  70% { transform: translate(3px, -1px) rotate(.6deg); }
+}
+@keyframes soup-spin {
+  from { transform: translate(-50%, -50%) scale(var(--soup-scale, .6)) rotate(0deg); }
+  to { transform: translate(-50%, -50%) scale(var(--soup-scale, .6)) rotate(360deg); }
+}
+@keyframes mix-sparkle {
+  0% { opacity: 0; transform: translateY(6px) scale(.6) rotate(0deg); }
+  45% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-16px) scale(1.15) rotate(40deg); }
+}
+
+@media (max-width: 1100px) {
+  .recipe-fab { display: block; }
+  .recipe-book {
+    display: none;
+    top: 58px;
+    right: 0;
+    width: min(320px, 86vw);
+    max-width: none;
+    max-height: calc(100dvh - 150px);
+    transform: rotate(0);
+  }
+  .recipe-book.open { display: block; }
+  .recipe-backdrop.is-open { display: block; opacity: 1; }
+  .bowl-drop { width: min(84%, 360px); }
+  .scene-make .scene-copy { max-width: 58vw; }
+}
+
+@media (max-width: 820px) {
+  .make-stage { top: 11vh; bottom: 9vh; }
+}
+
+@media (max-width: 560px) {
+  .scene-make .scene-copy { top: 18px !important; left: 14px !important; max-width: 62vw; }
+  .scene-make .scene-copy h2 { font-size: 19px !important; }
+  .recipe-fab { top: 18px; right: 14px; }
+  .make-stage { top: 9.5vh; left: 4vw; right: 4vw; bottom: 8.5vh; gap: 7px; }
+  .bowl-status { margin-bottom: 4px; font-size: 9px; }
+  .bowl-drop { width: min(96%, 340px); }
+  .bowl-tally { margin-top: 6px; gap: 4px; }
+  .tally-chip { padding: 2px 5px; font-size: 8px; }
+  .bowl-nearest { margin-top: 5px; padding: 2px 6px; font-size: 8px; }
+  .bowl-nearest span { font-size: 7px; }
+  .pantry { padding: 6px 7px 8px; }
+  .pantry-head { margin-bottom: 5px; font-size: 8px; }
+  .pantry-head small { display: none; }
+  .pantry-items { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
+  .ingredient-card.card-apple { grid-column: span 2; }
+  .ingredient-thumb { height: clamp(24px, 4.4vh, 34px); }
+  .ingredient-card { padding: 3px 2px 4px; border-width: 1px; box-shadow: 1px 1px 0 rgba(45, 41, 36, .4); }
+  .ingredient-name { font-size: 8px; }
+  .ingredient-role { display: none; }
+  .ingredient-amount { top: -6px; right: -4px; min-width: 16px; height: 16px; border-width: 1px; font-size: 7px; }
+  .make-actions { left: 4vw; right: 4vw; bottom: 2vh; }
+  .scene-make .make-actions .back-link { font-size: 9px; }
+  .make-cta { min-width: 136px; padding: 9px 11px; font-size: 11px; }
+  .mix-result-card { padding: 14px 12px; }
+  .mix-result-badge { width: min(56vw, 160px); }
+  .mix-result-actions { flex-wrap: wrap; }
+}
+
+@media (max-height: 620px) and (max-width: 820px) {
+  .make-stage { top: 8.5vh; bottom: 8vh; }
+  .recipe-fab { top: 12px; }
+  .scene-make .scene-copy { top: 12px !important; }
+  .ingredient-thumb { height: 24px; }
+  .bowl-drop { width: min(74%, 280px); }
+  .pantry-head { display: none; }
+}
+
+/* ===== 食用：格子餐桌做底图，盘子盛放食物，点击食物出现咬痕 ===== */
+.scene-eat {
+  background: radial-gradient(circle at 50% 16%, #42766b 0 26%, #1a3a34 78%) !important;
+}
+.scene-eat::after { opacity: .18; }
+.scene-eat .scene-copy {
+  padding: 7px 12px 9px;
+  background: rgba(13, 27, 48, .58);
+  border-left: 3px solid #ffd27a;
+  box-shadow: 0 6px 16px rgba(8, 18, 34, .28);
+  backdrop-filter: blur(2px);
+}
+
+.scene-eat .eat-table {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: auto;
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  box-shadow: none;
+  background: #0a1038 url('checkered-table-screen.png') center 50% / cover no-repeat;
+}
+
+.scene-eat .plate-row {
+  position: absolute;
+  z-index: 3;
+  top: 48%;
+  left: 50%;
+  width: min(94vw, 1180px);
+  transform: translate(-50%, -50%);
+}
+
+.scene-eat .dish {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--plate-w, 360px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.scene-eat .dish .plate {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: var(--plate-w, 360px);
+  height: auto;
+  aspect-ratio: 1264 / 1244;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: url('plate-topdown-table-compatible.png') center / contain no-repeat;
+  box-shadow: none;
+  transform: rotate(var(--dish-rot, 0deg));
+}
+
+.scene-eat .dish-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 2px 7px;
+  background: rgba(12, 33, 29, .82);
+  border: 1px solid rgba(255, 246, 204, .34);
+  color: #fff5d5;
+  font-family: var(--pixel);
+  font-size: 10px;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.scene-eat .dish-tag b { color: #ffd27a; font-size: 10px; }
+.scene-eat .dish.cleared .eaten-food { opacity: .16; }
+.scene-eat .dish.cleared .dish-tag { opacity: .6; }
+
+/* 食物保持原始像素尺寸，用 transform 缩放，咬痕坐标才稳定 */
+.scene-eat .food-cut {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 158px;
+  height: 111px;
+  transform: translate(-50%, -50%) scale(var(--food-scale, 1.4));
+  transform-origin: center center;
+  pointer-events: none;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-mode: alpha;
+  mask-mode: alpha;
+}
+
+.scene-eat .eaten-food {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  outline: none;
+  filter: drop-shadow(0 6px 5px rgba(38, 26, 16, .26));
+}
+.scene-eat .eaten-food:hover { filter: drop-shadow(0 6px 5px rgba(38, 26, 16, .26)) brightness(1.03); }
+.scene-eat .eaten-food:focus-visible { filter: drop-shadow(0 0 7px rgba(255, 233, 160, .95)); }
+.scene-eat .food-cut.chomping .eaten-food { animation: food-chomp .26s steps(3, end); }
+
+.scene-eat .bite-pop {
+  position: absolute;
+  z-index: 4;
+  display: block;
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 247, 214, .85);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.scene-eat .bite-pop.pop { animation: bite-pop .42s steps(4, end); }
+
+.scene-eat .bite-panel {
+  position: absolute;
+  z-index: 9;
+  left: 50%;
+  right: auto;
+  bottom: 3.2vh;
+  width: min(90vw, 780px);
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  padding: 9px 14px;
+  background: rgba(12, 33, 29, .95);
+  border: 1px solid rgba(255, 246, 204, .42);
+  box-shadow: 0 10px 20px rgba(8, 20, 17, .38);
+  color: #fff5d5;
+}
+.scene-eat .bite-count { gap: 9px; }
+.scene-eat .bite-count b { color: #ffd27a; font-size: 26px; }
+.scene-eat .bite-count span { color: #e2eecb; }
+.scene-eat .bite-mid { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.scene-eat .bite-hint {
+  font-family: var(--pixel);
+  font-size: 10px;
+  letter-spacing: .5px;
+  color: #ffe6a3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.scene-eat .bite-progress { margin: 0; height: 8px; background: rgba(255, 246, 204, .26); }
+.scene-eat .bite-progress div { background: linear-gradient(90deg, #ffd27a, #f0a24b); }
+.scene-eat .scene-back {
+  position: static;
+  margin: 0;
+  padding: 6px 9px;
+  border: 1px solid rgba(255, 246, 204, .38);
+  font-size: 9px;
+  text-shadow: none;
+  color: #fff5d5;
+  white-space: nowrap;
+}
+
+.scene-eat .finish-card {
+  position: absolute;
+  z-index: 20;
+  top: auto;
+  bottom: 14vh;
+  left: 50%;
+  width: max-content;
+  max-width: min(92vw, 420px);
+  margin: 0;
+  padding: 12px 14px;
+  transform: translateX(-50%);
+  background: rgba(247, 241, 222, .97);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 rgba(18, 28, 20, .45);
+  animation: finish-card-in .3s steps(3, end);
+}
+
+@keyframes food-chomp {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  45% { transform: translate(-50%, -50%) scale(1.07, .9); }
+}
+@keyframes bite-pop {
+  0% { opacity: .95; transform: scale(.3); }
+  100% { opacity: 0; transform: scale(1.15); }
+}
+@keyframes finish-card-in {
+  0% { opacity: 0; transform: translate(-50%, 10px) scale(.96); }
+  100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+@media (max-width: 620px) {
+  .scene-eat .dish-tag { font-size: 8px; padding: 2px 5px; }
+  .scene-eat .bite-panel {
+    width: min(92vw, 780px);
+    bottom: 2.4vh;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: "count back" "mid mid";
+    gap: 7px 12px;
+    padding: 8px 10px;
+  }
+  .scene-eat .bite-count { grid-area: count; }
+  .scene-eat .bite-mid { grid-area: mid; }
+  .scene-eat .scene-back { grid-area: back; justify-self: end; }
+}
+
+/* ===== 厨房背景 + 格纹桌 + 盘子式食材台 ===== */
+.scene-make {
+  background:
+    linear-gradient(180deg, rgba(20, 43, 35, .54) 0, rgba(20, 43, 35, .08) 24%, rgba(20, 43, 35, 0) 52%, rgba(50, 30, 16, .16) 100%),
+    url('assets/kitchen-bg.png') center 58% / cover no-repeat,
+    #8a6545 !important;
+}
+.scene-make .table-prop {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 40vh;
+  width: max(1200px, 110vw);
+  height: auto;
+  transform: translateX(-50%);
+  pointer-events: none;
+  image-rendering: pixelated;
+  -webkit-user-drag: none;
+  user-select: none;
+  filter: drop-shadow(0 16px 18px rgba(54, 32, 18, .26));
+}
+.scene-make .pantry {
+  grid-area: pantry;
+  align-self: end;
+  padding: 0;
+  color: #fff5d5;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.scene-make .pantry-head {
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto 3px;
+  padding: 3px 8px;
+  color: #fff5d5;
+  background: rgba(24, 58, 50, .72);
+  border: 1px solid rgba(255, 246, 204, .45);
+  box-shadow: 2px 2px 0 rgba(24, 40, 34, .22);
+  font-size: 9px;
+}
+.scene-make .pantry-head small { color: #d4e3b7; font-size: 8px; }
+.scene-make .pantry-items { display: grid; gap: 4px; align-items: end; }
+.scene-make .ingredient-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  min-width: 0;
+  padding: 0;
+  color: #412d1e;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+  transition: transform .14s steps(2, end), filter .14s;
+}
+.scene-make .ingredient-card:hover { background: transparent; transform: translateY(-4px); }
+.scene-make .ingredient-card:active { transform: translateY(-1px) scale(.98); }
+.scene-make .ingredient-card.dragging { opacity: .42; }
+.scene-make .ingredient-thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(48px, 9vh, 84px);
+  overflow: visible;
+}
+.scene-make .plate-image {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  width: 106%;
+  max-width: none;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  image-rendering: pixelated;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 4px 0 rgba(58, 36, 20, .22));
+}
+.scene-make .ingredient-icon {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 45%;
+  width: auto;
+  height: 62%;
+  max-width: 54%;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  pointer-events: none;
+  image-rendering: pixelated;
+  -webkit-user-drag: none;
+  filter: drop-shadow(1px 2px 0 rgba(45, 41, 36, .24));
+}
+.scene-make .ingredient-name {
+  position: relative;
+  z-index: 2;
+  margin-top: -1px;
+  padding: 1px 5px;
+  color: #412d1e;
+  background: rgba(255, 248, 230, .92);
+  border: 1px solid rgba(45, 41, 36, .28);
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.15;
+  text-shadow: none;
+  white-space: nowrap;
+}
+.scene-make .ingredient-role {
+  position: relative;
+  z-index: 2;
+  margin-top: 1px;
+  color: #fff5d5;
+  font-size: 7px;
+  line-height: 1;
+  text-shadow: 0 1px 0 rgba(45, 30, 18, .7);
+}
+.scene-make .ingredient-amount {
+  top: 4%;
+  right: 6%;
+  z-index: 3;
+  min-width: 18px;
+  height: 18px;
+  font-size: 8px;
+}
+.scene-make .pantry-items .ingredient-card.card-apple { grid-column: auto; }
+
+@media (max-width: 1100px) {
+  .scene-make .table-prop { top: 42vh; width: max(1250px, 160vw); }
+}
+@media (max-width: 820px) {
+  .scene-make .table-prop { top: 46vh; width: max(1100px, 330vw); }
+  .scene-make .pantry-head { margin-bottom: 1px; }
+}
+@media (max-width: 560px) {
+  .scene-make .table-prop { top: 46vh; width: max(1100px, 330vw); }
+  .scene-make .ingredient-thumb { height: clamp(44px, 8vh, 60px); }
+  .scene-make .ingredient-name { padding: 0 3px; font-size: 8px; border-color: rgba(45, 41, 36, .24); }
+  .scene-make .ingredient-amount { min-width: 16px; height: 16px; font-size: 7px; }
+}
+
+/* ===== 制作页最终布局：小桌子、低碗、环绕式盘子 ===== */
+.scene-make .table-prop {
+  position: absolute;
+  z-index: 2;
+  top: 44vh;
+  left: 3vw;
+  right: 3vw;
+  height: 40vh;
+  background: url('assets/table-pattern.png') center top / 660px 330px repeat;
+  background-color: #c9554d;
+  image-rendering: pixelated;
+  clip-path: polygon(3% 0, 97% 0, 100% 100%, 0 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 3%, #000 17%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, transparent 3%, #000 17%, #000 100%);
+  box-shadow: inset 0 -10px 0 #b07846, inset 0 -12px 0 rgba(65, 38, 20, .22);
+  pointer-events: none;
+}
+.scene-make .make-stage {
+  display: block;
+  top: 9vh;
+  bottom: 8vh;
+  left: 0;
+  right: 0;
+}
+.scene-make .bowl-zone {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 56%;
+  width: clamp(200px, 23vw, 270px);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+}
+.scene-make .bowl-drop { width: 100%; }
+.scene-make .bowl-status {
+  margin-bottom: 3px;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.scene-make .bowl-tally {
+  width: max-content;
+  max-width: min(90vw, 480px);
+  margin-top: 5px;
+}
+.scene-make .bowl-nearest {
+  margin-top: 4px;
+  white-space: nowrap;
+}
+.scene-make .pantry {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  pointer-events: none;
+}
+.scene-make .pantry-items {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.scene-make .ingredient-card {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: clamp(76px, 8vw, 108px);
+  padding: 0;
+  color: #412d1e;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+  transform: translate(-50%, -50%) rotate(var(--r, 0deg)) scale(var(--s, 1));
+  transform-origin: center;
+  pointer-events: auto;
+  transition: transform .14s steps(2, end);
+}
+.scene-make .ingredient-card:hover {
+  background: transparent;
+  transform: translate(-50%, -50%) rotate(var(--r, 0deg)) scale(calc(var(--s, 1) * 1.07));
+}
+.scene-make .ingredient-card:active {
+  transform: translate(-50%, -50%) rotate(var(--r, 0deg)) scale(calc(var(--s, 1) * .98));
+}
+.scene-make .ingredient-thumb { height: clamp(44px, 7vh, 62px); }
+.scene-make .ingredient-name { font-size: 8px; padding: 1px 4px; }
+.scene-make .ingredient-role { font-size: 6px; }
+.scene-make .ingredient-amount { top: 3%; right: 7%; }
+
+.scene-make .ingredient-card[data-ingredient="apple"] { --x: 20%; --y: 42%; --r: -8deg; --s: 1.03; }
+.scene-make .ingredient-card[data-ingredient="sugar"] { --x: 11%; --y: 57%; --r: -13deg; --s: .95; }
+.scene-make .ingredient-card[data-ingredient="salt"] { --x: 16%; --y: 73%; --r: -4deg; --s: 1; }
+.scene-make .ingredient-card[data-ingredient="flour"] { --x: 35%; --y: 86%; --r: 5deg; --s: .92; }
+.scene-make .ingredient-card[data-ingredient="water"] { --x: 65%; --y: 86%; --r: -6deg; --s: .95; }
+.scene-make .ingredient-card[data-ingredient="lemon"] { --x: 84%; --y: 73%; --r: 9deg; --s: 1; }
+.scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 89%; --y: 57%; --r: 13deg; --s: .95; }
+
+.scene-make .make-actions { gap: 8px; }
+.scene-make .make-actions .clear-bowl-link {
+  padding: 8px 10px;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+/* 碗里的内容：真实食材图标，按数量堆叠 */
+.bowl-soup {
+  filter: blur(7px) saturate(1.08);
+  opacity: 0;
+  transition: opacity .2s linear;
+}
+.bowl-ingredient {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: auto;
+  height: 21%;
+  max-width: 20%;
+  transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(var(--scale, 1));
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(1px 2px 0 rgba(45, 41, 36, .24));
+  animation: bowl-item-in .26s steps(3, end);
+}
+
+@keyframes bowl-item-in {
+  0% { opacity: 0; transform: translate(-50%, -160%) rotate(var(--rot, 0deg)) scale(.5); }
+  70% { opacity: 1; transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(1.12); }
+  100% { opacity: 1; transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(1); }
+}
+
+@media (max-width: 820px) {
+  .scene-make .table-prop {
+    top: 42vh;
+    left: 1vw;
+    right: 1vw;
+    height: 44vh;
+    background-size: 440px 220px;
+  }
+  .scene-make .bowl-zone { top: 56%; width: clamp(190px, 23vw, 240px); }
+  .scene-make .ingredient-card { width: clamp(58px, 17vw, 72px); }
+  .scene-make .ingredient-thumb { height: clamp(34px, 5.2vh, 46px); }
+  .scene-make .ingredient-name { font-size: 7px; padding: 0 3px; }
+  .scene-make .ingredient-role { display: none; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 10%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 90%; }
+  .scene-make .bowl-status { font-size: 8px; }
+  .scene-make .bowl-tally { max-width: 92vw; }
+  .scene-make .bowl-nearest { font-size: 8px; }
+}
+
+@media (max-width: 560px) {
+  .scene-make .table-prop {
+    top: 42vh;
+    height: 44vh;
+    background-size: 330px 165px;
+  }
+  .scene-make .bowl-zone { width: clamp(180px, 55vw, 220px); top: 56%; }
+  .scene-make .ingredient-card { width: clamp(56px, 16.5vw, 70px); }
+  .scene-make .ingredient-thumb { height: clamp(32px, 5.4vh, 44px); }
+  .scene-make .bowl-status { display: none; }
+  .scene-make .bowl-tally { margin-top: 4px; }
+  .scene-make .bowl-nearest { margin-top: 3px; }
+  .scene-make .make-actions { gap: 6px; }
+  .scene-make .make-actions .clear-bowl-link { padding: 7px 7px; font-size: 8px; }
+}
+
+/* 碗内食材图标（按份数堆叠） */
+.bowl-piece {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: clamp(15px, 1.9vw, 24px);
+  height: auto;
+  transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(var(--piece-scale, 1));
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(1px 2px 0 rgba(45, 41, 36, .26));
+  animation: bowl-piece-in .26s steps(3, end);
+}
+@keyframes bowl-piece-in {
+  0% { opacity: 0; transform: translate(-50%, -160%) rotate(var(--rot, 0deg)) scale(calc(var(--piece-scale, 1) * .55)); }
+  70% { opacity: 1; transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(calc(var(--piece-scale, 1) * 1.12)); }
+  100% { opacity: 1; transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(var(--piece-scale, 1)); }
+}
+@media (max-width: 560px) {
+  .bowl-piece { width: clamp(13px, 4.8vw, 20px); }
+}
+
+/* 让环形食材台铺满制作舞台，而不是被旧的 grid-area 压成 0 高度 */
+.scene-make .pantry {
+  grid-area: auto;
+  align-self: stretch;
+}
+
+/* 制作台再收小：去掉暗边，碗下移，盘子围成松散一圈 */
+.scene-make .table-prop {
+  top: 48vh;
+  left: 8vw;
+  right: 8vw;
+  width: auto;
+  height: 34vh;
+  transform: none;
+  border-radius: 50%;
+  box-shadow: none;
+  clip-path: none;
+  -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 32%, rgba(0, 0, 0, .62) 58%, transparent 88%);
+  mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 32%, rgba(0, 0, 0, .62) 58%, transparent 88%);
+}
+.scene-make .bowl-zone {
+  top: 65%;
+  width: clamp(180px, 19vw, 200px);
+}
+.scene-make .bowl-drop { width: 100%; }
+
+.scene-make .ingredient-card[data-ingredient="apple"] { --x: 22%; --y: 53%; }
+.scene-make .ingredient-card[data-ingredient="sugar"] { --x: 9%; --y: 67%; }
+.scene-make .ingredient-card[data-ingredient="salt"] { --x: 19%; --y: 81%; }
+.scene-make .ingredient-card[data-ingredient="flour"] { --x: 33%; --y: 85%; }
+.scene-make .ingredient-card[data-ingredient="water"] { --x: 67%; --y: 83%; }
+.scene-make .ingredient-card[data-ingredient="lemon"] { --x: 80%; --y: 79%; }
+.scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 86%; --y: 56%; }
+
+@media (max-width: 620px) {
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 15%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 85%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 20%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 80%; }
+}
+
+@media (max-width: 340px) {
+  .scene-make .bowl-nearest { display: none; }
+}
+
+/* ===== 使用完整的格纹桌子立绘；桌子作为场景道具，不再只铺图案 ===== */
+.scene-make .table-prop {
+  display: block !important;
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  right: auto;
+  top: 40vh;
+  width: max(900px, 110vw);
+  max-width: none;
+  height: auto;
+  transform: translateX(-50%);
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  clip-path: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 4%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 4%, #000 100%);
+  image-rendering: pixelated;
+  filter: drop-shadow(0 16px 18px rgba(54, 32, 18, .24));
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+@media (max-width: 820px) {
+  .scene-make .table-prop {
+    top: 40vh;
+    width: max(900px, 280vw);
+  }
+}
+@media (max-width: 560px) {
+  .scene-make .table-prop {
+    top: 40vh;
+    width: max(900px, 300vw);
+  }
+}
+
+/* ===== 最终构图：完整桌子适当缩小，碗和盘子集中在桌面上 ===== */
+.scene-make .table-prop {
+  top: 40vh;
+  width: max(900px, 80vw);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 5%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 5%, #000 100%);
+}
+.scene-make .bowl-zone {
+  top: 61%;
+  width: clamp(170px, 18vw, 195px);
+}
+.scene-make .ingredient-card[data-ingredient="apple"] { --x: 22%; --y: 53%; }
+.scene-make .ingredient-card[data-ingredient="sugar"] { --x: 13%; --y: 66%; }
+.scene-make .ingredient-card[data-ingredient="salt"] { --x: 20%; --y: 79%; }
+.scene-make .ingredient-card[data-ingredient="flour"] { --x: 36%; --y: 84%; }
+.scene-make .ingredient-card[data-ingredient="water"] { --x: 64%; --y: 84%; }
+.scene-make .ingredient-card[data-ingredient="lemon"] { --x: 80%; --y: 79%; }
+.scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 85%; --y: 66%; }
+
+@media (max-width: 820px) {
+  .scene-make .table-prop {
+    top: 44vh;
+    width: max(1000px, 260vw);
+  }
+  .scene-make .bowl-zone {
+    top: 62%;
+    width: clamp(170px, 45vw, 190px);
+  }
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 20%; --y: 50%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 10%; --y: 63%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 18%; --y: 77%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 35%; --y: 81%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 65%; --y: 81%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 82%; --y: 77%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 88%; --y: 60%; }
+}
+
+@media (max-width: 820px) {
+  .scene-make .table-prop {
+    top: 42vh;
+    width: 700px;
+    max-width: none;
+  }
+  .scene-make .bowl-zone {
+    top: 58%;
+    width: clamp(160px, 46vw, 185px);
+  }
+  .scene-make .ingredient-card { width: 54px; }
+  .scene-make .ingredient-thumb { height: clamp(30px, 4.4vh, 38px); }
+  .scene-make .ingredient-name { font-size: 7px; }
+  .scene-make .bowl-status,
+  .scene-make .bowl-tally,
+  .scene-make .bowl-nearest { display: none; }
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 20%; --y: 43%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 10%; --y: 52%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 18%; --y: 60%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 35%; --y: 64%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 65%; --y: 64%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 82%; --y: 60%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 88%; --y: 52%; }
+}
+
+/* 桌面后沿融入背景，避免出现一条深色分割线 */
+.scene-make .table-prop {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 2%, #000 15%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, transparent 2%, #000 15%, #000 100%);
+}
+
+/* 厨房背景稍微下移，避免柜台暗线与桌沿重叠 */
+.scene-make { background-position: center 68% !important; }
+
+/* 桌面后沿直接使用格纹边缘，不再透出背景中的柜台暗线 */
+.scene-make .table-prop {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
+/* ===== 桌子下移，食材放大 ===== */
+.scene-make .table-prop { top: 50vh; }
+.scene-make .bowl-zone {
+  top: 65%;
+  width: clamp(180px, 19vw, 205px);
+}
+.scene-make .ingredient-card { width: clamp(90px, 9.5vw, 120px); }
+.scene-make .ingredient-thumb { height: clamp(52px, 8vh, 70px); }
+.scene-make .ingredient-name { font-size: 9px; }
+.scene-make .bowl-ingredient { height: 25%; max-width: 24%; }
+.scene-make .ingredient-card[data-ingredient="apple"] { --x: 22%; --y: 58%; }
+.scene-make .ingredient-card[data-ingredient="sugar"] { --x: 13%; --y: 69%; }
+.scene-make .ingredient-card[data-ingredient="salt"] { --x: 20%; --y: 80%; }
+.scene-make .ingredient-card[data-ingredient="flour"] { --x: 36%; --y: 86%; }
+.scene-make .ingredient-card[data-ingredient="water"] { --x: 64%; --y: 86%; }
+.scene-make .ingredient-card[data-ingredient="lemon"] { --x: 80%; --y: 80%; }
+.scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 85%; --y: 69%; }
+
+@media (max-width: 820px) {
+  .scene-make .table-prop { top: 50vh; width: 700px; }
+  .scene-make .bowl-zone {
+    top: 62%;
+    width: clamp(175px, 48vw, 195px);
+  }
+  .scene-make .ingredient-card { width: 64px; }
+  .scene-make .ingredient-thumb { height: clamp(38px, 5.4vh, 46px); }
+  .scene-make .ingredient-name { font-size: 8px; }
+  .scene-make .bowl-ingredient { height: 25%; max-width: 24%; }
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 20%; --y: 50%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 10%; --y: 58%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 18%; --y: 68%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 35%; --y: 72%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 65%; --y: 72%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 82%; --y: 68%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 88%; --y: 58%; }
+}
+
+@media (max-width: 820px) {
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 14%; --y: 58%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 10%; --y: 65%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 14%; --y: 73%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 35%; --y: 77%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 65%; --y: 77%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 86%; --y: 73%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 90%; --y: 65%; }
+}
+
+/* 桌子按自身尺寸再下移：桌面起点落到 60%，碗盘整体随之下移 */
+.scene-make .table-prop { top: 60vh; }
+.scene-make .bowl-zone { top: 72%; }
+.scene-make .ingredient-card[data-ingredient="apple"] { --y: 66%; }
+.scene-make .ingredient-card[data-ingredient="sugar"] { --y: 76%; }
+.scene-make .ingredient-card[data-ingredient="salt"] { --y: 86%; }
+.scene-make .ingredient-card[data-ingredient="flour"] { --y: 92%; }
+.scene-make .ingredient-card[data-ingredient="water"] { --y: 92%; }
+.scene-make .ingredient-card[data-ingredient="lemon"] { --y: 86%; }
+.scene-make .ingredient-card[data-ingredient="cinnamon"] { --y: 76%; }
+
+@media (max-width: 820px) {
+  .scene-make .table-prop { top: 60vh; }
+  .scene-make .bowl-zone { top: 72%; }
+  .scene-make .ingredient-card[data-ingredient="apple"] { --y: 66%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --y: 76%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --y: 86%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --y: 88%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --y: 88%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --y: 86%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --y: 76%; }
+}
+
+/* 只下移桌子，碗和材料保持原来的位置 */
+.scene-make .table-prop { top: 60vh; }
+.scene-make .bowl-zone { top: 65%; }
+.scene-make .ingredient-card[data-ingredient="apple"] { --y: 58%; }
+.scene-make .ingredient-card[data-ingredient="sugar"] { --y: 69%; }
+.scene-make .ingredient-card[data-ingredient="salt"] { --y: 80%; }
+.scene-make .ingredient-card[data-ingredient="flour"] { --y: 86%; }
+.scene-make .ingredient-card[data-ingredient="water"] { --y: 86%; }
+.scene-make .ingredient-card[data-ingredient="lemon"] { --y: 80%; }
+.scene-make .ingredient-card[data-ingredient="cinnamon"] { --y: 69%; }
+
+@media (max-width: 820px) {
+  .scene-make .table-prop { top: 60vh; }
+  .scene-make .bowl-zone { top: 62%; }
+  .scene-make .ingredient-card[data-ingredient="apple"] { --y: 58%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --y: 65%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --y: 73%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --y: 77%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --y: 77%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --y: 73%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --y: 65%; }
+}
+
+/* 桌子按自身尺寸放大 0.3 倍（宽高同比 ×1.3），位置和碗盘保持不变 */
+.scene-make .table-prop {
+  width: max(1170px, 104vw);
+}
+@media (max-width: 820px) {
+  .scene-make .table-prop {
+    width: 910px;
+  }
+}
+
+/* 放大时以桌子中心为基准，桌面向上多出一些，刚好承托住碗和盘子 */
+.scene-make .table-prop {
+  top: 48vh;
+  width: max(1170px, 104vw);
+}
+@media (max-width: 820px) {
+  .scene-make .table-prop {
+    top: 53vh;
+    width: 910px;
+  }
+}
+
+/* ===== 背景模糊 10%，桌子再下移 1%，盘子重新摆到桌面内 ===== */
+.scene-make { background: #8a6545 !important; }
+.scene-make::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: -28px;
+  background:
+    linear-gradient(180deg, rgba(20, 43, 35, .54) 0, rgba(20, 43, 35, .08) 24%, rgba(20, 43, 35, 0) 52%, rgba(50, 30, 16, .16) 100%),
+    url('assets/kitchen-bg.png') center 58% / cover no-repeat;
+  filter: blur(5px);
+  transform: scale(1.02);
+  pointer-events: none;
+}
+.scene-make .table-prop {
+  transform: translate(-50%, 1%) !important;
+}
+
+/* 碗内不再显示奶油色/汤色的椭圆 */
+.bowl-mix {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.bowl-soup { display: none !important; }
+.result-soup { display: none !important; }
+
+/* 盘子重新收进桌面范围 */
+.scene-make .ingredient-card[data-ingredient="apple"] { --x: 24%; --y: 56%; }
+.scene-make .ingredient-card[data-ingredient="sugar"] { --x: 14%; --y: 68%; }
+.scene-make .ingredient-card[data-ingredient="salt"] { --x: 22%; --y: 80%; }
+.scene-make .ingredient-card[data-ingredient="flour"] { --x: 36%; --y: 84%; }
+.scene-make .ingredient-card[data-ingredient="water"] { --x: 64%; --y: 84%; }
+.scene-make .ingredient-card[data-ingredient="lemon"] { --x: 78%; --y: 80%; }
+.scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 86%; --y: 68%; }
+
+@media (max-width: 820px) {
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 16%; --y: 56%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 10%; --y: 66%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 18%; --y: 76%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 35%; --y: 80%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 65%; --y: 80%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 82%; --y: 76%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 90%; --y: 66%; }
+}
+
+/* 盘子上沿再收进桌面，避免苹果/肉桂跑到桌沿外 */
+.scene-make .ingredient-card[data-ingredient="apple"] { --y: 57%; }
+.scene-make .ingredient-card[data-ingredient="sugar"] { --y: 69%; }
+.scene-make .ingredient-card[data-ingredient="salt"] { --y: 80%; }
+.scene-make .ingredient-card[data-ingredient="flour"] { --y: 85%; }
+.scene-make .ingredient-card[data-ingredient="water"] { --y: 85%; }
+.scene-make .ingredient-card[data-ingredient="lemon"] { --y: 80%; }
+.scene-make .ingredient-card[data-ingredient="cinnamon"] { --y: 57%; }
+
+@media (max-width: 820px) {
+  .scene-make .ingredient-card[data-ingredient="apple"] { --y: 60%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --y: 68%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --y: 78%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --y: 82%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --y: 82%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --y: 78%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --y: 60%; }
+}
+
+/* 桌面实际上只有桌子图上层 20%：碗和盘子收回到这条窄桌面上 */
+.scene-make .bowl-zone { top: 56%; }
+.scene-make .ingredient-card[data-ingredient="apple"] { --y: 57%; }
+.scene-make .ingredient-card[data-ingredient="sugar"] { --y: 60%; }
+.scene-make .ingredient-card[data-ingredient="salt"] { --y: 62.5%; }
+.scene-make .ingredient-card[data-ingredient="flour"] { --y: 64%; }
+.scene-make .ingredient-card[data-ingredient="water"] { --y: 64%; }
+.scene-make .ingredient-card[data-ingredient="lemon"] { --y: 62.5%; }
+.scene-make .ingredient-card[data-ingredient="cinnamon"] { --y: 60%; }
+
+@media (max-width: 820px) {
+  .scene-make .bowl-zone { top: 59%; }
+  .scene-make .ingredient-card[data-ingredient="apple"] { --y: 60.5%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --y: 61.5%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --y: 62.5%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --y: 63.2%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --y: 63.2%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --y: 62.5%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --y: 61.5%; }
+}
+
+/* 盘子在 20% 的桌面上横向铺开，避免挤在左侧 */
+.scene-make .ingredient-card[data-ingredient="apple"] { --x: 9%; }
+.scene-make .ingredient-card[data-ingredient="sugar"] { --x: 20%; }
+.scene-make .ingredient-card[data-ingredient="salt"] { --x: 30%; }
+.scene-make .ingredient-card[data-ingredient="flour"] { --x: 50%; }
+.scene-make .ingredient-card[data-ingredient="water"] { --x: 70%; }
+.scene-make .ingredient-card[data-ingredient="lemon"] { --x: 80%; }
+.scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 91%; }
+
+@media (max-width: 820px) {
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 10%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 21%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 30%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 50%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 70%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 79%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 90%; }
+}
+
+/* 在 20% 桌面上改为左右两簇：左边 4 个、右边 3 个，避免盘子压住碗中心 */
+.scene-make .ingredient-card[data-ingredient="apple"] { --x: 5%; --y: 57%; }
+.scene-make .ingredient-card[data-ingredient="sugar"] { --x: 17%; --y: 59%; }
+.scene-make .ingredient-card[data-ingredient="salt"] { --x: 29%; --y: 61%; }
+.scene-make .ingredient-card[data-ingredient="flour"] { --x: 41%; --y: 63%; }
+.scene-make .ingredient-card[data-ingredient="water"] { --x: 64%; --y: 63%; }
+.scene-make .ingredient-card[data-ingredient="lemon"] { --x: 77%; --y: 61%; }
+.scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 90%; --y: 59%; }
+
+@media (max-width: 820px) {
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 4%; --y: 58%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 16%; --y: 60%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 28%; --y: 62%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 40%; --y: 63.5%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 64%; --y: 63.5%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 77%; --y: 62%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 90%; --y: 60%; }
+}
+
+/* 修正最左/最右盘子的出屏问题 */
+.scene-make .ingredient-card[data-ingredient="apple"] { --x: 8%; }
+.scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 92%; }
+@media (max-width: 820px) {
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 10%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 90%; }
+}
+
+/* 苹果菜品：结果卡和食用界面直接展示苹果 */
+.mix-result-badge .result-apple {
+  display: none;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 6px 0 rgba(45, 41, 36, .18));
+}
+.mix-result-badge.show-apple {
+  width: min(42vw, 130px);
+  aspect-ratio: auto;
+  display: grid;
+  place-items: center;
+}
+.mix-result-badge.show-apple .result-bowl { display: none; }
+.mix-result-badge.show-apple .result-soup { display: none; }
+.mix-result-badge.show-apple .result-apple { display: block; }
+
+/* 用真实菜品图展示成品 */
+.mix-result-badge .result-food {
+  display: none;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 6px 0 rgba(45, 41, 36, .18));
+}
+.mix-result-badge.show-food {
+  width: min(52vw, 178px);
+  aspect-ratio: auto;
+  display: grid;
+  place-items: center;
+}
+.mix-result-badge.show-food .result-bowl,
+.mix-result-badge.show-food .result-soup,
+.mix-result-badge.show-food .result-apple { display: none; }
+.mix-result-badge.show-food .result-food { display: block; }
+
+.scene-eat .eaten-food.fresh-apple {
+  width: 114px;
+  height: 67px;
+  background: url('assets/apple.png') center / contain no-repeat;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.scene-eat .eaten-food.fresh-apple span,
+.scene-eat .eaten-food.fresh-apple i,
+.scene-eat .eaten-food.fresh-apple b { display: none; }
+
+/* 碗放到盘子上层，避免被挡；移动端盘子分两排，减少互相遮挡 */
+.scene-make .bowl-zone { z-index: 7; }
+@media (max-width: 820px) {
+  .scene-make .ingredient-card { width: 58px; }
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 7%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 24%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 76%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 93%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 16%; --y: 63.4%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 42%; --y: 63.4%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 68%; --y: 63.4%; }
+}
+
+@media (max-width: 820px) {
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 10%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 91%; }
+}
+
+/* 盘子放到碗的前层，但错开中心；缩小移动端碗和盘子以消除互相遮挡 */
+.scene-make .pantry { z-index: 8; }
+@media (max-width: 820px) {
+  .scene-make .bowl-zone { width: 140px; }
+  .scene-make .ingredient-card { width: 52px; }
+  .scene-make .ingredient-thumb { height: 34px; }
+  .scene-make .ingredient-name { font-size: 7px; }
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 8%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 21%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 79%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 92%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 16%; --y: 63.4%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 38%; --y: 63.4%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 62%; --y: 63.4%; }
+}
+
+@media (min-width: 821px) {
+  .scene-make .bowl-zone { left: 55%; }
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 6%; --y: 57%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 17%; --y: 59%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 28%; --y: 61%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 39%; --y: 63%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 71%; --y: 63%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 82%; --y: 61%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 93%; --y: 59%; }
+}
+
+/* 碗保持最前层；移动端前面两盘向两侧让开碗心 */
+.scene-make .bowl-zone { z-index: 9; }
+@media (max-width: 820px) {
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 30%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 70%; }
+}
+
+/* 苹果：逐帧食用动画（整果 → 一口口咬 → 果核） */
+.scene-eat .eaten-food.is-frame {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.scene-eat .eaten-food.is-frame .food-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.scene-eat .dish.cleared .eaten-food.is-frame { opacity: 1; }
+
+/* 桌子两侧的盘子再往内收，留出边距；桌面版盘子略收小以保持不重叠 */
+@media (min-width: 821px) {
+  .scene-make .bowl-zone { left: 56%; }
+  .scene-make .ingredient-card { width: clamp(84px, 8.6vw, 108px); }
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 8%; --y: 57%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 19%; --y: 59%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 30%; --y: 61%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 41%; --y: 63%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 69%; --y: 63%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 80%; --y: 61%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 91%; --y: 59%; }
+}
+@media (max-width: 820px) {
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 13%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 29%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 71%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 87%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 16%; --y: 63.4%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 30%; --y: 63.4%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 70%; --y: 63.4%; }
+}
+
+/* 盘子和调料整体放大，换用新的桂皮/柠檬/水/砂糖图标 */
+.scene-make .plate-image { width: 110%; }
+.scene-make .ingredient-icon { height: 70%; max-width: 56%; }
+
+@media (min-width: 821px) {
+  .scene-make .ingredient-card { width: clamp(96px, 9.8vw, 124px); }
+  .scene-make .ingredient-thumb { height: clamp(56px, 8.6vh, 76px); }
+}
+@media (max-width: 820px) {
+  .scene-make .ingredient-card { width: 64px; }
+  .scene-make .ingredient-thumb { height: clamp(42px, 5.8vh, 50px); }
+  .scene-make .ingredient-name { font-size: 8px; }
+  .scene-make .ingredient-card[data-ingredient="apple"] { --x: 14%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="sugar"] { --x: 30%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="cinnamon"] { --x: 70%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="lemon"] { --x: 86%; --y: 56.5%; }
+  .scene-make .ingredient-card[data-ingredient="salt"] { --x: 13%; --y: 63.2%; }
+  .scene-make .ingredient-card[data-ingredient="flour"] { --x: 30%; --y: 63.2%; }
+  .scene-make .ingredient-card[data-ingredient="water"] { --x: 70%; --y: 63.2%; }
+}
+
+/* 碗内食材也适当放大，方便看清 */
+.scene-make .bowl-ingredient { height: 30%; max-width: 27%; }
+
+/* 背景只模糊上半部分，下半部分保持清晰 */
+.scene-make {
+  background:
+    linear-gradient(180deg, rgba(20, 43, 35, .54) 0, rgba(20, 43, 35, .08) 24%, rgba(20, 43, 35, 0) 52%, rgba(50, 30, 16, .16) 100%),
+    url('assets/kitchen-bg.png') center 58% / cover no-repeat,
+    #8a6545 !important;
+}
+.scene-make::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0 0 45% 0;
+  background: none;
+  filter: none;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0 70%, transparent 100%);
+  pointer-events: none;
+}
+/* ── 第零站：时间系统 ─────────────────────────────── */
+.scene-intro { display: block; background: #14231f; }
+.scene-intro[hidden] { display: none; }
+
+.intro-stage {
+  --orchard-tint: #ffb37a;
+  --orchard-tint-alpha: .08;
+  --sky-b-opacity: 0;
+  --scene-pos-y: 62%;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  color: #fff4d4;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* 天空 + 苹果树场景 */
+.intro-art {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.intro-sky,
+.intro-orchard {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% var(--scene-pos-y);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.intro-sky-a { z-index: 1; }
+.intro-sky-b { z-index: 2; opacity: var(--sky-b-opacity); }
+.intro-orchard {
+  image-rendering: pixelated;
+  transition: opacity .55s ease;
+}
+.intro-orchard-a { z-index: 3; opacity: 1; }
+.intro-orchard-b { z-index: 4; opacity: 0; }
+/* 时段色只压在下半部果园上，天空保持各自的时段图 */
+.intro-orchard-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(180deg, transparent 0%, transparent 30%, var(--orchard-tint) 58%, var(--orchard-tint) 100%);
+  opacity: var(--orchard-tint-alpha);
+  pointer-events: none;
+}
+
+/* 压暗上下，保证标题和底部文字可读 */
+.intro-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(18, 14, 10, .38) 0%, transparent 26%, transparent 60%, rgba(14, 10, 7, .74) 100%),
+    radial-gradient(ellipse at 50% 42%, transparent 54%, rgba(14, 10, 7, .2) 100%);
+}
+
+/* 手机 UI：状态栏、App 顶栏、Home indicator（全屏 App，不使用手机外壳） */
+.intro-phone-top {
+  position: absolute;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 92px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(10, 14, 18, .62), rgba(10, 14, 18, .2) 62%, transparent);
+}
+.intro-statusbar {
+  position: absolute;
+  z-index: 32;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 30px;
+  padding: 0 16px;
+  color: #fff;
+  font-family: var(--body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .2px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+  pointer-events: none;
+}
+.intro-status-icons { display: flex; align-items: center; gap: 6px; }
+.intro-status-icons svg { display: block; }
+.intro-appbar {
+  position: absolute;
+  z-index: 31;
+  top: 30px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 38px;
+  padding: 0 16px;
+  color: #fff6dd;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .45);
+  pointer-events: none;
+}
+.intro-appbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--pixel);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.intro-appbar-brand img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.intro-appbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+.intro-appbar-sound {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid rgba(255, 246, 220, .4);
+  border-radius: 999px;
+  background: rgba(20, 14, 8, .28);
+  color: rgba(255, 246, 220, .92);
+  font-family: var(--pixel);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: auto;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.intro-appbar-sound:hover { background: rgba(20, 14, 8, .48); }
+.intro-appbar-sound:focus-visible { outline: 2px solid #91b8df; outline-offset: 2px; }
+.intro-appbar-sound.muted { opacity: .48; }
+.game-sound {
+  position: fixed;
+  z-index: 40;
+  right: 12px;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(255, 246, 220, .45);
+  border-radius: 50%;
+  background: rgba(24, 58, 50, .62);
+  color: #fff6dc;
+  font-family: var(--pixel);
+  font-size: 14px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  opacity: .78;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.game-sound:hover { opacity: 1; background: rgba(24, 58, 50, .86); }
+.game-sound:focus-visible { outline: 2px solid #91b8df; outline-offset: 2px; }
+.game-sound.muted { opacity: .42; }
+.game-sound[hidden] { display: none; }
+@media (max-width: 560px) {
+  .game-sound { right: 8px; width: 30px; height: 30px; font-size: 12px; }
+}
+.intro-appbar-skip {
+  padding: 4px 11px;
+  border: 1px solid rgba(255, 246, 220, .4);
+  border-radius: 999px;
+  background: rgba(20, 14, 8, .28);
+  color: rgba(255, 246, 220, .92);
+  font-size: 10px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  pointer-events: auto;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.intro-appbar-skip:hover { background: rgba(20, 14, 8, .48); }
+.intro-appbar-skip:focus-visible { outline: 2px solid #91b8df; outline-offset: 2px; }
+.intro-home-indicator {
+  position: absolute;
+  z-index: 26;
+  left: 50%;
+  bottom: 7px;
+  width: 120px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 246, 220, .62);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* 标题 */
+.intro-title-block {
+  position: absolute;
+  z-index: 10;
+  top: 5.5%;
+  left: 6%;
+  max-width: 44%;
+  margin-top: 46px;
+  pointer-events: none;
+}
+.intro-title-block::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -30px -50px -24px -30px;
+  background: radial-gradient(ellipse at 30% 40%, rgba(20, 14, 8, .52), transparent 70%);
+}
+.intro-title-block .eyebrow {
+  margin: 0 0 6px;
+  color: #ffd58a;
+  font-size: clamp(9px, 1vw, 11px);
+  letter-spacing: 1.5px;
+  text-shadow: 1px 1px 0 #2c1e12, 0 0 8px rgba(20, 14, 8, .6);
+}
+.intro-title-block h1 {
+  margin: 0;
+  color: #fff8df;
+  font-family: var(--pixel);
+  font-size: clamp(28px, 3.4vw, 42px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: 1px;
+  text-shadow: 3px 3px 0 rgba(40, 28, 16, .72), 0 0 16px rgba(20, 14, 8, .5);
+}
+.intro-lede {
+  margin: 8px 0 0;
+  max-width: 280px;
+  color: rgba(255, 247, 220, .92);
+  font-size: clamp(10px, .9vw, 11.5px);
+  line-height: 1.65;
+  text-shadow: 1px 1px 0 rgba(40, 28, 16, .8);
+}
+
+/* 读到第 20 条时，从顶部滑下一条「果园小助手」通知 */
+.intro-notice {
+  position: absolute;
+  z-index: 42;
+  top: 14px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(420px, calc(100% - 28px));
+  padding: 10px 12px;
+  border: 1px solid rgba(45, 41, 36, .12);
+  border-radius: 16px;
+  background: rgba(250, 247, 238, .96);
+  box-shadow: 0 12px 30px rgba(20, 14, 8, .28);
+  color: #2c2924;
+  text-align: left;
+  transform: translateX(-50%);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: intro-notice-in .42s cubic-bezier(.2, .8, .2, 1) both;
+}
+.intro-notice[hidden] { display: none; }
+.intro-notice.is-leaving { animation: intro-notice-out .22s ease forwards; }
+.intro-notice:hover { background: #fffdf7; }
+.intro-notice:focus-visible { outline: 3px solid #91b8df; outline-offset: 2px; }
+.intro-notice-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #2f7d4f;
+}
+.intro-notice-icon img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.intro-notice-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.intro-notice-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: #4b4438;
+  font-family: var(--pixel);
+  font-size: 9px;
+  letter-spacing: .5px;
+}
+.intro-notice-head small { color: #9a8f7c; font-size: 8px; }
+.intro-notice-title {
+  color: #2c2924;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+.intro-notice-text {
+  color: #6f6555;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.intro-notice-arrow {
+  flex: none;
+  color: #9a8f7c;
+  font-size: 18px;
+  line-height: 1;
+}
+@keyframes intro-notice-in {
+  from { opacity: 0; transform: translate(-50%, -14px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+@keyframes intro-notice-out {
+  from { opacity: 1; transform: translate(-50%, 0); }
+  to { opacity: 0; transform: translate(-50%, -10px); }
+}
+
+/* 切换场景：一群苹果从左滚到右 */
+.apple-transition {
+  position: fixed;
+  z-index: 46;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.apple-transition[hidden] { display: none; }
+.apple-transition.is-active { pointer-events: auto; }
+.apple-transition-wash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 217, 146, .32), transparent 58%),
+    linear-gradient(180deg, #f7efdb 0%, #efe3c6 58%, #e4d3ae 100%);
+  opacity: 0;
+  transition: opacity .18s ease;
+}
+.apple-transition.is-active .apple-transition-wash { opacity: .97; }
+.apple-transition.is-leaving .apple-transition-wash { opacity: 0; transition-duration: .32s; }
+.apple-transition-track {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.apple-transition-wall {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  animation: apple-wall-roll 900ms linear both;
+  will-change: transform;
+}
+.apple-transition-fruit {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: auto;
+  margin-left: calc(var(--size) * -.5);
+  margin-top: calc(var(--size) * -.5);
+  image-rendering: pixelated;
+  user-select: none;
+  -webkit-user-drag: none;
+  animation: apple-fruit-spin var(--spin-duration) linear infinite;
+}
+@keyframes apple-wall-roll {
+  from { transform: translate3d(-100%, 0, 0); }
+  to { transform: translate3d(calc(100% + 340px), 0, 0); }
+}
+@keyframes apple-fruit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 上半部分：天空里的物候手账（图文横向排版，位置随条目变化） */
+.intro-notes {
+  position: absolute;
+  z-index: 7;
+  top: 5.5%;
+  right: 5%;
+  width: clamp(520px, 46vw, 660px);
+  margin-top: 46px;
+  pointer-events: none;
+}
+.intro-notes[data-layout="1"] { top: 9%; right: 7.5%; }
+.intro-notes[data-layout="2"] { top: 6.5%; left: 50%; right: auto; transform: translateX(-50%); }
+.intro-notes[data-layout="3"] { top: 9.5%; left: 50%; right: auto; transform: translateX(-50%); }
+.intro-note-card {
+  position: relative;
+  color: #fff6dd;
+}
+.intro-note-card.is-in .intro-note-title,
+.intro-note-card.is-in .intro-note-body,
+.intro-note-card.is-in .intro-note-tags,
+.intro-note-card.is-in .intro-note-source,
+.intro-note-card.is-in .intro-note-credit { animation: intro-note-in .28s ease both; }
+@keyframes intro-note-in {
+  from { opacity: .2; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.intro-note-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-family: var(--pixel);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .95), 0 2px 6px rgba(0, 0, 0, .9), 0 0 14px rgba(0, 0, 0, .8);
+}
+.intro-note-index { color: #ffd58a; }
+.intro-note-origin { color: rgba(255, 246, 220, .9); white-space: nowrap; }
+.intro-note-stage { color: rgba(255, 246, 220, .78); text-align: right; }
+.intro-note-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.intro-notes[data-media="right"] .intro-note-row { flex-direction: row-reverse; }
+.intro-note-figure {
+  position: relative;
+  flex: 0 0 46%;
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #0e0c09;
+  box-shadow: 0 10px 26px rgba(8, 6, 4, .42);
+}
+.intro-note-figure img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.intro-note-figure.is-new-image img { animation: intro-photo-in .28s ease both; }
+@keyframes intro-photo-in {
+  from { opacity: .35; }
+  to { opacity: 1; }
+}
+.intro-note-figure figcaption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 4px 8px;
+  color: rgba(255, 246, 220, .92);
+  background: rgba(14, 11, 8, .66);
+  font-size: 9px;
+  letter-spacing: .6px;
+}
+.intro-note-copy {
+  flex: 1;
+  min-width: 0;
+}
+.intro-note-title {
+  margin: 0 0 6px;
+  color: #ffe9b4;
+  font-family: var(--pixel);
+  font-size: clamp(21px, 1.7vw, 25px);
+  font-weight: 400;
+  letter-spacing: .5px;
+  text-shadow: -1.5px -1.5px 0 rgba(30, 18, 8, .92), 1.5px -1.5px 0 rgba(30, 18, 8, .92), -1.5px 1.5px 0 rgba(30, 18, 8, .92), 1.5px 1.5px 0 rgba(30, 18, 8, .92), 0 4px 16px rgba(0, 0, 0, .9);
+}
+.intro-note-body {
+  margin: 0;
+  color: #fff9e8;
+  font-size: clamp(13px, 1.05vw, 14px);
+  line-height: 1.7;
+  text-shadow: -1px -1px 0 rgba(14, 9, 4, .95), 1px -1px 0 rgba(14, 9, 4, .95), -1px 1px 0 rgba(14, 9, 4, .95), 1px 1px 0 rgba(14, 9, 4, .95), 0 3px 10px rgba(0, 0, 0, .9);
+}
+.intro-note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 9px;
+}
+.intro-note-tags span {
+  padding: 3px 7px;
+  color: #ffe1a0;
+  background: rgba(24, 18, 10, .62);
+  border: 1px solid rgba(255, 213, 138, .45);
+  font-size: 10px;
+  letter-spacing: .4px;
+  white-space: nowrap;
+}
+.intro-note-source {
+  margin: 9px 0 0;
+  color: rgba(255, 246, 220, .88);
+  font-size: 10px;
+  letter-spacing: .3px;
+  overflow-wrap: anywhere;
+  text-shadow: -1px -1px 0 rgba(14, 9, 4, .95), 1px -1px 0 rgba(14, 9, 4, .95), -1px 1px 0 rgba(14, 9, 4, .95), 1px 1px 0 rgba(14, 9, 4, .95), 0 2px 8px rgba(0, 0, 0, .9);
+}
+.intro-note-credit {
+  margin: 3px 0 0;
+  color: rgba(255, 246, 220, .68);
+  font-size: 9px;
+  line-height: 1.4;
+  letter-spacing: .2px;
+  overflow-wrap: anywhere;
+  text-shadow: -1px -1px 0 rgba(14, 9, 4, .95), 1px -1px 0 rgba(14, 9, 4, .95), -1px 1px 0 rgba(14, 9, 4, .95), 1px 1px 0 rgba(14, 9, 4, .95), 0 2px 8px rgba(0, 0, 0, .9);
+}
+
+/* 拖动天空：整屏交互层 */
+.intro-drag-surface {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  cursor: grab;
+  touch-action: none;
+  outline: none;
+}
+.intro-drag-surface.is-dragging { cursor: grabbing; }
+.intro-drag-surface:focus-visible { outline: 3px solid #91b8df; outline-offset: -6px; }
+
+.intro-drag-cue {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  top: 36%;
+  margin: 0;
+  padding: 4px 10px;
+  transform: translateX(-50%);
+  color: rgba(255, 247, 220, .95);
+  background: rgba(20, 14, 8, .42);
+  border: 1px solid rgba(255, 246, 220, .32);
+  font-family: var(--pixel);
+  font-size: clamp(10px, 1.1vw, 12px);
+  letter-spacing: 2px;
+  white-space: nowrap;
+  text-shadow: 1px 1px 0 #2c1e12;
+  opacity: .9;
+  pointer-events: none;
+  animation: intro-cue-pulse 2.4s ease-in-out infinite;
+  transition: opacity .35s;
+}
+.intro-drag-cue.is-hidden { opacity: 0; animation: none; }
+
+/* 底部：生长阶段 + 入口 */
+.intro-bottom {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px clamp(16px, 4vw, 52px) 34px;
+  background: linear-gradient(180deg, transparent 0, rgba(18, 13, 9, .62) 42%, rgba(18, 13, 9, .86) 100%);
+}
+.intro-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: #fff2ce;
+  font-family: var(--pixel);
+  font-size: clamp(11px, 1.25vw, 14px);
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 0 #2c1e12;
+}
+.intro-subtitle::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  background: #c3482f;
+  border: 1px solid #2d2924;
+}
+.intro-esc { color: rgba(255, 246, 220, .6); font-size: 9px; white-space: nowrap; }
+
+@keyframes intro-cue-pulse {
+  0%, 100% { opacity: .65; }
+  50% { opacity: 1; }
+}
+
+@media (max-width: 1000px) {
+  .intro-title-block { max-width: 46%; }
+  .intro-notes { width: 520px; }
+  .intro-stage { --scene-pos-y: 58%; }
+  .intro-notes[data-layout="2"],
+  .intro-notes[data-layout="3"] { left: auto; right: 5%; transform: none; }
+  .intro-notes[data-layout="2"] { top: 6.5%; }
+  .intro-notes[data-layout="3"] { top: 11%; }
+}
+
+@media (max-width: 860px) {
+  .intro-title-block { top: 6%; left: 5%; max-width: 66%; margin-top: 42px; }
+  .intro-title-block h1 { font-size: clamp(24px, 7.4vw, 30px); }
+  .intro-lede { max-width: 240px; font-size: 10px; }
+  .intro-stage { --scene-pos-y: 50%; }
+  .intro-notes,
+  .intro-notes[data-layout="0"],
+  .intro-notes[data-layout="1"],
+  .intro-notes[data-layout="2"],
+  .intro-notes[data-layout="3"] {
+    left: 12px;
+    right: auto;
+    margin-top: 0;
+    transform: none;
+    width: min(calc(100% - 24px), 520px);
+  }
+  .intro-notes[data-layout="0"] { top: 25%; }
+  .intro-notes[data-layout="1"] { top: 26%; }
+  .intro-notes[data-layout="2"] { top: 26%; }
+  .intro-notes[data-layout="3"] { top: 27%; }
+  .intro-note-head { margin-bottom: 5px; font-size: 9px; }
+  .intro-note-row { gap: 12px; }
+  .intro-note-figure { flex: 0 0 43%; aspect-ratio: 4 / 3; }
+  .intro-note-title { margin-bottom: 4px; font-size: 20px; }
+  .intro-note-body {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 1.62;
+  }
+  .intro-note-tags { margin-top: 6px; gap: 4px; }
+  .intro-note-tags span { padding: 2px 6px; font-size: 9px; }
+  .intro-note-source { margin-top: 6px; font-size: 9px; }
+  .intro-note-credit { font-size: 8px; }
+  .intro-drag-cue { top: 52%; font-size: 9px; }
+}
+
+@media (max-width: 720px) {
+  .intro-title-block { top: 6%; }
+  .intro-title-block h1 { font-size: clamp(24px, 7.4vw, 28px); }
+  .intro-bottom { flex-direction: column; align-items: center; gap: 0; padding: 16px 14px 30px; }
+  .intro-subtitle { font-size: 11px; }
+  .intro-esc { display: none; }
+}
+
+@media (max-height: 700px) and (min-width: 861px) {
+  .intro-title-block { top: 4.5%; }
+  .intro-title-block h1 { font-size: 30px; }
+  .intro-notes { top: 5.5%; }
+  .intro-note-body { font-size: 13px; }
+  .intro-bottom { padding-top: 12px; padding-bottom: 28px; }
+}
+
+@media (max-width: 860px) and (max-height: 720px) {
+  .intro-appbar { justify-content: flex-end; }
+  .intro-appbar-brand { display: none; }
+  .intro-phone-top { height: 64px; }
+  .intro-title-block { top: 4.5%; max-width: 60%; margin-top: 26px; }
+  .intro-title-block h1 { font-size: 24px; }
+  .intro-lede { display: none; }
+  .intro-notes[data-layout="0"] { top: 16%; }
+  .intro-notes[data-layout="1"] { top: 18%; }
+  .intro-notes[data-layout="2"] { top: 17%; }
+  .intro-notes[data-layout="3"] { top: 19%; }
+  .intro-note-body { font-size: 12px; }
+  .intro-drag-cue { top: 48%; }
+  .intro-bottom { padding-top: 10px; padding-bottom: 26px; gap: 8px; }
+}
+
+@media (max-width: 860px) {
+  .intro-notice { top: 10px; padding: 9px 10px; gap: 9px; }
+  .intro-notice-icon { width: 34px; height: 34px; border-radius: 9px; }
+  .intro-notice-icon img { width: 23px; height: 23px; }
+}
+
+@media (max-width: 560px) {
+  .intro-notice { top: 8px; width: calc(100% - 16px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-drag-cue { animation: none; opacity: .85; }
+  .intro-notice { animation: none; }
+  .apple-transition-fruit { display: none; }
+  .apple-transition-wash { transition-duration: .12s; }
+  .intro-orchard { transition: none; }
+  .intro-note-card.is-in .intro-note-title,
+  .intro-note-card.is-in .intro-note-body,
+  .intro-note-card.is-in .intro-note-tags,
+  .intro-note-card.is-in .intro-note-source,
+  .intro-note-card.is-in .intro-note-credit { animation-duration: .01s; }
+  .intro-note-figure.is-new-image img { animation-duration: .01s; }
+}
+
+/* ===== 把碗拖到下方：垃圾桶 + 翻碗倒空 ===== */
+.bowl-drop { cursor: grab; }
+.bowl-drop.is-grabbed {
+  z-index: 16;
+  cursor: grabbing;
+  transition: none;
+  transform: translate(var(--drag-x, 0px), var(--drag-y, 0px)) scale(1.03);
+  filter: drop-shadow(0 14px 12px rgba(34, 45, 34, .28));
+}
+.bowl-drop.is-returning {
+  transition: transform .24s cubic-bezier(.2, .8, .3, 1);
+}
+.bowl-drop.is-pouring {
+  z-index: 17;
+  transform-origin: 50% 58%;
+  animation: bowl-pour .82s cubic-bezier(.34, .02, .72, 1) forwards;
+}
+@keyframes bowl-pour {
+  0% { transform: translate(var(--drag-x, 0px), var(--drag-y, 0px)) rotate(0deg) scale(1.03); }
+  22% { transform: translate(var(--drag-x, 0px), calc(var(--drag-y, 0px) - 26px)) rotate(-18deg) scale(1.05); }
+  55% { transform: translate(var(--drag-x, 0px), calc(var(--drag-y, 0px) - 18px)) rotate(-126deg) scale(.96); }
+  78% { transform: translate(var(--drag-x, 0px), calc(var(--drag-y, 0px) - 12px)) rotate(-126deg) scale(.95); }
+  100% { transform: translate(var(--drag-x, 0px), calc(var(--drag-y, 0px) - 8px)) rotate(-126deg) scale(.94); }
+}
+.bowl-drop.is-pouring .bowl-bits { animation: pour-fade .58s .16s steps(4, end) forwards; }
+@keyframes pour-fade {
+  to { opacity: 0; transform: translateY(-12%); }
+}
+
+.trash-zone {
+  position: absolute;
+  z-index: 14;
+  left: 50%;
+  bottom: max(14px, 3.4vh);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, calc(100% + 44px));
+  transition: transform .2s steps(3, end), opacity .16s linear;
+}
+.trash-zone.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.trash-can {
+  position: relative;
+  width: 96px;
+  height: 88px;
+  filter: drop-shadow(4px 6px 0 rgba(27, 42, 33, .28));
+  transition: filter .15s linear;
+}
+.trash-zone.is-hot .trash-can {
+  filter: drop-shadow(0 0 14px #ffe49a) drop-shadow(4px 6px 0 rgba(27, 42, 33, .28));
+}
+.trash-lid {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 0;
+  width: 92px;
+  height: 16px;
+  transform: translateX(-50%);
+  background: #5c7a63;
+  border: 3px solid var(--ink);
+  border-radius: 2px;
+}
+.trash-lid::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -10px;
+  width: 34px;
+  height: 10px;
+  transform: translateX(-50%);
+  background: #6f8d74;
+  border: 3px solid var(--ink);
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+}
+.trash-body {
+  position: absolute;
+  left: 50%;
+  top: 15px;
+  display: flex;
+  justify-content: space-evenly;
+  width: 78px;
+  height: 70px;
+  padding: 11px 8px 8px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #8bae8f, #6d8f72);
+  border: 3px solid var(--ink);
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+  box-shadow: inset 0 6px 0 rgba(255, 255, 255, .14);
+  overflow: hidden;
+}
+.trash-body i {
+  display: block;
+  width: 7px;
+  height: 100%;
+  background: rgba(43, 68, 50, .28);
+  border-radius: 2px;
+}
+.trash-hint {
+  padding: 3px 8px;
+  color: #fff5d5;
+  background: rgba(24, 58, 50, .92);
+  border: 1px solid rgba(255, 246, 204, .6);
+  font-size: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .14s linear, transform .14s steps(2, end);
+}
+.trash-zone.is-hot .trash-hint,
+.trash-zone.is-pouring .trash-hint { opacity: 1; transform: none; }
+.trash-zone.is-hot .trash-lid { animation: trash-open .22s steps(2, end) forwards; }
+@keyframes trash-open {
+  to { transform: translateX(-50%) translateY(-8px) rotate(-10deg); }
+}
+
+.pour-piece {
+  position: fixed;
+  z-index: 140;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+  filter: drop-shadow(1px 2px 0 rgba(45, 41, 36, .28));
+}
+
+@media (max-width: 560px) {
+  .trash-zone { bottom: 66px; }
+  .trash-can { width: 86px; height: 79px; }
+  .trash-lid { width: 82px; }
+  .trash-body { width: 70px; height: 63px; }
+}
+
+/* 食用界面：有真实菜品图时直接展示图片 */
+.scene-eat .eaten-food.has-image {
+  width: 150px;
+  height: 114px;
+  background: var(--dish-img) center / contain no-repeat;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.scene-eat .eaten-food.has-image::before,
+.scene-eat .eaten-food.has-image::after { display: none; }
+.scene-eat .eaten-food.has-image span,
+.scene-eat .eaten-food.has-image i,
+.scene-eat .eaten-food.has-image b { display: none; }
+
+/* ===== 加载页：介绍页之前的 App 启动画面 ===== */
+.loading-screen {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #243b31;
+  background:
+    radial-gradient(circle at 50% 34%, rgba(255, 217, 146, .42), transparent 52%),
+    linear-gradient(180deg, #f8f0dc 0%, #efe3c6 58%, #e4d3ae 100%);
+  transition: opacity .42s ease, visibility .42s ease;
+}
+.loading-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(45, 41, 36, .14) .7px, transparent .7px);
+  background-size: 6px 6px;
+  opacity: .32;
+  pointer-events: none;
+}
+.loading-screen::after {
+  content: '';
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -14%;
+  height: 42%;
+  background: radial-gradient(ellipse at 50% 100%, rgba(80, 116, 74, .3), transparent 66%);
+  pointer-events: none;
+}
+.loading-screen.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+.loading-screen[hidden] { display: none; }
+
+.loading-statusbar {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 30px;
+  padding: 0 16px;
+  color: #2f4a3d;
+  font-family: var(--body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+.loading-status-icons { display: flex; align-items: center; gap: 6px; }
+.loading-status-icons svg { display: block; }
+
+.loading-center {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px;
+  text-align: center;
+}
+.loading-mark {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  background: #fff8e6;
+  border: 2px solid #2d2924;
+  box-shadow: 5px 5px 0 rgba(45, 41, 36, .28);
+  animation: loading-bob 2.2s ease-in-out infinite;
+}
+.loading-mark img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.loading-kicker {
+  margin: 18px 0 6px;
+  color: #8a7a60;
+  font-family: var(--pixel);
+  font-size: 9px;
+  letter-spacing: 3px;
+}
+.loading-title {
+  margin: 0;
+  color: #243b31;
+  font-family: var(--pixel);
+  font-size: clamp(28px, 6vw, 38px);
+  font-weight: 400;
+  letter-spacing: 3px;
+  text-shadow: 2px 2px 0 rgba(255, 248, 230, .8);
+}
+.loading-copy {
+  margin: 18px 0 10px;
+  color: #6f6250;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.loading-bar {
+  width: min(260px, 70vw);
+  height: 9px;
+  padding: 2px;
+  background: rgba(45, 41, 36, .12);
+  border: 1px solid rgba(45, 41, 36, .2);
+}
+.loading-bar i {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, #3f7a58 0 12px, #4f8d68 12px 24px);
+  transition: width .45s cubic-bezier(.2, .8, .2, 1);
+}
+.loading-count {
+  margin: 7px 0 0;
+  color: #8a7a60;
+  font-family: var(--pixel);
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+.loading-home {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 8px;
+  width: 120px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(36, 59, 49, .35);
+  transform: translateX(-50%);
+}
+@keyframes loading-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loading-screen { transition: none; }
+  .loading-mark { animation: none; }
+  .loading-bar i { transition: none; }
+}
+
+/* ===== 食材名字：平时收起，悬停/点按时浮在材料上方 ===== */
+.scene-make .ingredient-card { z-index: 1; }
+.scene-make .ingredient-name {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 3px);
+  z-index: 20;
+  margin: 0;
+  padding: 2px 7px;
+  color: #3c2a1c;
+  background: #fff8e6;
+  border: 1px solid rgba(45, 41, 36, .55);
+  box-shadow: 2px 2px 0 rgba(45, 41, 36, .26);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.3;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 4px) rotate(calc(-1 * var(--r, 0deg)));
+  transition: opacity .12s ease, transform .12s ease;
+}
+.scene-make .ingredient-card:hover,
+.scene-make .ingredient-card:focus-visible,
+.scene-make .ingredient-card:active { z-index: 20; }
+.scene-make .ingredient-card:hover .ingredient-name,
+.scene-make .ingredient-card:focus-visible .ingredient-name,
+.scene-make .ingredient-card:active .ingredient-name {
+  opacity: 1;
+  transform: translate(-50%, 0) rotate(calc(-1 * var(--r, 0deg)));
+}
+.scene-make .ingredient-role { display: none; }
+@media (max-width: 820px) {
+  .scene-make .ingredient-name { padding: 2px 5px; font-size: 9px; }
+}

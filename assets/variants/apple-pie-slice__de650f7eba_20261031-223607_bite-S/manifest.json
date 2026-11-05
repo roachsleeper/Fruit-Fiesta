@@ -1,0 +1,28 @@
+{
+  "operation": "bite-redraw",
+  "reference": {
+    "backup": "F:\\Fruit Fiesta\\assets\\reference\\apple-pie-slice__de650f7eba__de650f7eba.png",
+    "sha256": "de650f7ebac073bd6cbd01aea836427f94e8618cc644d0852d21980c6b61fb94",
+    "verified_after": "de650f7ebac073bd6cbd01aea836427f94e8618cc644d0852d21980c6b61fb94"
+  },
+  "params": {
+    "center": [
+      55.0,
+      250.0
+    ],
+    "radius": 42.0,
+    "block": 9,
+    "teeth": [
+      4.0,
+      4.0
+    ],
+    "crust_blocks": 1,
+    "filling_blocks": 2,
+    "shadow_blocks": 1
+  },
+  "outputs": {
+    "png": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223607_bite-S\\bite-S.png",
+    "png_1x": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223607_bite-S\\bite-S-1x.png"
+  },
+  "created": "2026-10-31T22:36:07"
+}

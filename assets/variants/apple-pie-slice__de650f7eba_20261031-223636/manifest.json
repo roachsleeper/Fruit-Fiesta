@@ -1,0 +1,28 @@
+{
+  "reference": {
+    "original": "F:\\Fruit Fiesta\\assets\\reference\\apple-pie-slice__de650f7eba.png",
+    "backup": "F:\\Fruit Fiesta\\assets\\reference\\apple-pie-slice__de650f7eba__de650f7eba.png",
+    "sha256": "de650f7ebac073bd6cbd01aea836427f94e8618cc644d0852d21980c6b61fb94"
+  },
+  "params": {
+    "prompt": "pixel art apple pie slice, one bite taken out, exposed apple filling cross-section, dark brown outline, flat colors, game asset, white background",
+    "negative": "blurry, low quality, jpeg artifacts, watermark, text, photo, 3d render",
+    "denoise": 0.5,
+    "steps": 24,
+    "cfg": 6.0,
+    "lora": "PixelArtRedmond-Lite64.safetensors",
+    "lora_strength": 0.75,
+    "lock_palette": true,
+    "checkpoint": "DreamShaper_8_pruned.safetensors"
+  },
+  "variants": [
+    {
+      "seed": 101,
+      "file": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223636\\v1_seed101.png",
+      "file_1x": "F:\\Fruit Fiesta\\assets\\variants\\apple-pie-slice__de650f7eba_20261031-223636\\v1_seed101-1x.png",
+      "sha256": "2a7ae010eea9cfd75f76004fac5f27abaab1a84ccd21c3c4a86bff813e37e03a"
+    }
+  ],
+  "created": "2026-10-31T22:36:36",
+  "reference_verified_after": "de650f7ebac073bd6cbd01aea836427f94e8618cc644d0852d21980c6b61fb94"
+}
