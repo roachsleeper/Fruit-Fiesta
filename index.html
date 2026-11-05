@@ -2,314 +2,122 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <meta name="theme-color" content="#203c35" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0b1a17" />
     <title>果园小食光</title>
     <link rel="icon" type="image/png" href="assets/apple.png" />
-    <link rel="preload" as="font" type="font/otf" href="assets/fonts/ZhuoTeZiYouTi-2.otf" crossorigin />
-    <link rel="stylesheet" href="styles.css?v=55" />
+    <style>
+      /* 竖屏舞台：把游戏锁在竖屏比例内，桌面端居中留边，手机竖屏时自动铺满 */
+      :root {
+        color-scheme: dark;
+        --stage-ratio: 0.46;      /* 宽 / 高，约等于 9 : 19.5 的手机竖屏 */
+        --stage-max-w: 430px;     /* 桌面端最大展示宽度 */
+        --stage-max-h: 935px;     /* 与上面的宽度保持同一比例 */
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body { height: 100%; margin: 0; }
+
+      body {
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: radial-gradient(120% 90% at 50% 0%, #1d4a3f 0%, #132e29 45%, #0a1614 100%);
+        font-family: 'ZhuoTeZiYouTi', 'Noto Sans SC', sans-serif;
+        /* iOS 刘海 / 底部横条安全区 */
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      }
+
+      .stage {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+        background: #142d2a;
+        isolation: isolate;
+      }
+
+      .stage iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #142d2a;
+        color-scheme: light;
+      }
+
+      /* 宽屏（桌面 / 平板 / 横屏）：收成手机竖屏的尺寸并居中 */
+      @media (min-aspect-ratio: 3 / 5) {
+        .stage {
+          width: min(calc(100dvh * var(--stage-ratio)), var(--stage-max-w));
+          height: min(100dvh, var(--stage-max-h));
+          border-radius: 22px;
+          box-shadow:
+            0 26px 70px rgba(0, 0, 0, 0.55),
+            0 0 0 1px rgba(255, 240, 205, 0.1),
+            0 0 0 8px rgba(11, 26, 23, 0.55);
+        }
+      }
+
+      /* 手机横屏：竖屏游戏不适合横着玩，提示旋转 */
+      .rotate-hint {
+        display: none;
+        position: fixed;
+        inset: 0;
+        place-content: center;
+        justify-items: center;
+        gap: 14px;
+        padding: 24px;
+        text-align: center;
+        color: #fff6d8;
+      }
+
+      .rotate-hint svg { width: 68px; height: 68px; opacity: 0.9; }
+      .rotate-hint b { font-size: 20px; letter-spacing: 2px; }
+      .rotate-hint span { font-size: 12px; color: #b9d0a2; letter-spacing: 1px; }
+
+      @media (orientation: landscape) and (max-height: 560px) and (pointer: coarse) {
+        .stage { display: none; }
+        .rotate-hint { display: grid; }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .stage { transition: width 0.18s ease, height 0.18s ease; }
+      }
+    </style>
   </head>
   <body>
-    <div class="loading-screen" id="loading-screen" role="status" aria-live="polite" aria-label="正在准备果园">
-      <div class="loading-statusbar" aria-hidden="true">
-        <span class="loading-time" id="loading-time">9:41</span>
-        <span class="loading-status-icons">
-          <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
-          <svg width="15" height="11" viewBox="0 0 15 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M1 3.6a9.4 9.4 0 0 1 13 0"/><path d="M3.6 6.3a6 6 0 0 1 7.8 0"/><path d="M6.1 8.9a2.3 2.3 0 0 1 2.8 0"/></svg>
-          <svg width="24" height="11" viewBox="0 0 24 11" fill="none"><rect x="0.5" y="0.5" width="20" height="10" rx="2.5" stroke="currentColor" opacity=".55"/><rect x="2" y="2" width="15" height="7" rx="1.5" fill="currentColor"/><rect x="21.5" y="3.5" width="2" height="4" rx="1" fill="currentColor" opacity=".55"/></svg>
-        </span>
-      </div>
-
-      <div class="loading-center">
-        <div class="loading-mark" aria-hidden="true"><img src="assets/apple.png" alt="" draggable="false" /></div>
-        <p class="loading-kicker">ORCHARD DAY</p>
-        <h1 class="loading-title">果园小食光</h1>
-        <p class="loading-copy">正在准备果园…</p>
-        <div class="loading-bar" id="loading-progress" role="progressbar" aria-label="加载进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="loading-bar-fill"></i></div>
-        <p class="loading-count"><span id="loading-count">0</span>%</p>
-      </div>
-
-      <div class="loading-home" aria-hidden="true"></div>
+    <!-- 游戏本体在 game.html 中；用 iframe 给它一个独立的竖屏视口，
+         这样内部所有 vw / vh / 媒体查询都按竖屏计算，无需改动游戏代码 -->
+    <div class="stage">
+      <iframe
+        src="game.html"
+        title="果园小食光"
+        allow="autoplay; fullscreen; gamepad"
+        allowfullscreen
+      ></iframe>
     </div>
 
-    <main class="game-shell" aria-label="果园小食光游戏">
-      <div class="screen-noise"></div>
+    <div class="rotate-hint" role="status">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="15" y="6" width="18" height="30" rx="3" />
+        <path d="M20 33h8" />
+        <path d="M39 20a9 9 0 0 0-6-6.6" />
+        <path d="M33 9.5V15h5.5" />
+      </svg>
+      <b>请旋转至竖屏</b>
+      <span>本作按手机竖屏设计</span>
+    </div>
 
-      <header class="game-hud">
-        <div class="hud-brand"><span class="brand-leaf">✦</span><span><b>果园小食光</b><small>ORCHARD DAY</small></span></div>
-        <div class="journey-progress stage-nav" aria-label="游戏阶段">
-          <div class="progress-step" data-step="pick"><span>01</span><b>摘取</b></div>
-          <i></i>
-          <div class="progress-step" data-step="make"><span>02</span><b>制作</b></div>
-          <i></i>
-          <div class="progress-step" data-step="eat"><span>03</span><b>食用</b></div>
-        </div>
-        <div class="hud-actions"><span class="hud-day">DAY 01</span><button class="icon-button" id="sound-toggle" aria-label="切换音效">♪</button><button class="icon-button" id="reset-game" aria-label="重新开始">↻</button></div>
-      </header>
-
-      <section class="game-screen" id="game-screen">
-        <div class="scene scene-intro" id="intro-scene" aria-labelledby="intro-title">
-          <div class="intro-stage" id="intro-stage" data-phase="morning">
-            <div class="intro-art" id="intro-art">
-              <img class="intro-sky intro-sky-a" id="intro-sky-a" src="assets/intro/morning-sky.jpg" alt="" draggable="false" />
-              <img class="intro-sky intro-sky-b" id="intro-sky-b" src="assets/intro/noon-sky.jpg" alt="" draggable="false" />
-              <img class="intro-orchard intro-orchard-a" id="intro-orchard-a" src="assets/intro/orchard-scene.png" alt="" draggable="false" />
-              <img class="intro-orchard intro-orchard-b" id="intro-orchard-b" src="assets/intro/orchard-scene.png" alt="" draggable="false" />
-            </div>
-            <div class="intro-orchard-tint" id="intro-orchard-tint" aria-hidden="true"></div>
-            <div class="intro-vignette" aria-hidden="true"></div>
-
-            <div class="intro-phone-top" aria-hidden="true"></div>
-            <div class="intro-statusbar" aria-hidden="true">
-              <span class="intro-status-time" id="intro-time">9:41</span>
-              <span class="intro-status-icons">
-                <svg class="intro-status-signal" width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
-                <svg class="intro-status-wifi" width="15" height="11" viewBox="0 0 15 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M1 3.6a9.4 9.4 0 0 1 13 0"/><path d="M3.6 6.3a6 6 0 0 1 7.8 0"/><path d="M6.1 8.9a2.3 2.3 0 0 1 2.8 0"/></svg>
-                <svg class="intro-status-battery" width="24" height="11" viewBox="0 0 24 11" fill="none"><rect x="0.5" y="0.5" width="20" height="10" rx="2.5" stroke="currentColor" opacity=".55"/><rect x="2" y="2" width="15" height="7" rx="1.5" fill="currentColor"/><rect x="21.5" y="3.5" width="2" height="4" rx="1" fill="currentColor" opacity=".55"/></svg>
-              </span>
-            </div>
-            <div class="intro-appbar">
-              <span class="intro-appbar-brand"><img src="assets/apple.png" alt="" draggable="false" /><b>物候手账</b></span>
-              <div class="intro-appbar-actions">
-                <button class="intro-appbar-sound" id="intro-sound" type="button" aria-label="关闭音效" aria-pressed="true">♪</button>
-                <button class="intro-appbar-skip" id="intro-skip" type="button">跳过</button>
-              </div>
-            </div>
-
-            <div class="intro-title-block">
-              <p class="eyebrow">第零站 · 陕西名片</p>
-              <h1 id="intro-title">陕西红富士</h1>
-              <p class="intro-lede">向左滑动天空<br />走完晨午昏夜，果园长大一程。</p>
-            </div>
-
-            <aside class="intro-notes" id="intro-notes" data-layout="0" data-media="left" aria-label="物候手账">
-              <div class="intro-note-card" id="intro-note-card" data-phase="morning">
-                <div class="intro-note-head">
-                  <span class="intro-note-index" id="intro-note-index">01 / 20 · 晨</span>
-                  <span class="intro-note-origin" id="intro-note-origin">产区 · 白水（渭南）</span>
-                  <span class="intro-note-stage" id="intro-note-stage">萌芽 · 开花</span>
-                </div>
-                <div class="intro-note-row">
-                  <figure class="intro-note-figure">
-                    <img id="intro-note-image" src="assets/content/note-01.jpg" alt="枝头的条纹红富士苹果" draggable="false" />
-                    <figcaption id="intro-note-place">枝头红富士</figcaption>
-                  </figure>
-                  <div class="intro-note-copy">
-                    <h2 class="intro-note-title" id="intro-note-title">红富士</h2>
-                    <p class="intro-note-body" id="intro-note-body">渭北旱塬日照足、昼夜温差大，白水与洛川是陕西红富士的核心产区。</p>
-                    <div class="intro-note-tags" id="intro-note-tags"><span>渭北旱塬</span><span>优生区</span></div>
-                    <p class="intro-note-source" id="intro-note-source">来源：陕西省果业中心</p>
-                    <p class="intro-note-credit" id="intro-note-credit">图：用户提供</p>
-                  </div>
-                </div>
-              </div>
-            </aside>
-
-            <p class="intro-drag-cue" id="intro-drag-cue" aria-hidden="true">← 向左滑动天空 · 点一下听旁白</p>
-
-            <div class="intro-drag-surface" id="intro-drag-surface" role="slider" tabindex="0"
-              aria-label="左右滑动切换手账，点击或按回车播放旁白" aria-valuemin="0" aria-valuemax="19" aria-valuenow="0"
-              aria-valuetext="第 1 / 20 条 · 阶段 1 / 5 · 晨"></div>
-
-            <div class="intro-bottom">
-              <p class="intro-subtitle"><span id="intro-subtitle-text">阶段 1 / 5 · 塬上醒了</span></p>
-              <span class="intro-esc">Esc 跳过</span>
-            </div>
-            <div class="intro-home-indicator" aria-hidden="true"></div>
-          </div>
-
-          <button class="intro-notice" id="intro-notice" type="button" hidden aria-live="polite" aria-label="果园小助手：苹果熟透啦，去果园摘一颗，回来做甜品。点击进入果园">
-            <span class="intro-notice-icon" aria-hidden="true"><img src="assets/apple.png" alt="" draggable="false" /></span>
-            <span class="intro-notice-body">
-              <span class="intro-notice-head"><b>果园小助手</b><small>现在</small></span>
-              <span class="intro-notice-title">苹果熟透啦</span>
-              <span class="intro-notice-text">去果园摘一颗，回来做甜品。</span>
-            </span>
-            <span class="intro-notice-arrow" aria-hidden="true">›</span>
-          </button>
-        </div>
-
-        <div class="scene scene-pick active" id="pick-scene" hidden>
-          <div class="scene-copy"><p class="eyebrow" id="scene-kicker">第一站 · 果园</p><h1 id="scene-title">摘下今天的好心情</h1><p class="scene-subtitle">选一棵树，带走一点秋天的甜。</p></div>
-
-          <div class="fruit-tabs" role="tablist" aria-label="选择水果">
-            <button class="fruit-tab active" data-fruit="apple" role="tab" aria-selected="true"><span class="tab-fruit apple-mini"></span><span><b>苹果园</b><small>发射套索</small></span><strong id="apple-count">0 / 6</strong></button>
-            <!-- 柿子通道暂时隐藏，当前主打红富士 -->
-            <button class="fruit-tab hidden" data-fruit="persimmon" role="tab" aria-selected="false" hidden><span class="tab-fruit persimmon-mini"></span><span><b>柿子树</b><small>瓶口接果</small></span><strong id="persimmon-count">0 / 3</strong></button>
-          </div>
-          <div class="orchard-card" id="orchard-card">
-            <div class="world-label"><span>秋日晴 · 16:08</span><span>APPLE ORCHARD</span></div>
-            <div class="orchard-copy"><span class="location-pin">⌖</span><span id="orchard-instruction">绳索从下方发出，点击向上套住苹果！</span></div>
-            <div class="orchard-world apple-world" id="apple-world">
-              <div class="pixel-cloud cloud-one"></div><div class="pixel-cloud cloud-two"></div>
-              <div class="orchard-trees" aria-hidden="true">
-                <div class="bg-tree bg-tree-1"><img src="apple-tree.png" alt="" draggable="false" /><i></i><i></i><i></i></div>
-                <div class="bg-tree bg-tree-2"><img src="apple-tree.png" alt="" draggable="false" /><i></i><i></i><i></i></div>
-                <div class="bg-tree bg-tree-3"><img src="apple-tree.png" alt="" draggable="false" /><i></i><i></i><i></i></div>
-                <div class="bg-tree bg-tree-4"><img src="apple-tree.png" alt="" draggable="false" /><i></i><i></i><i></i></div>
-                <div class="bg-tree bg-tree-5"><img src="apple-tree.png" alt="" draggable="false" /><i></i><i></i><i></i></div>
-                <div class="bg-tree bg-tree-6"><img src="apple-tree.png" alt="" draggable="false" /><i></i><i></i><i></i></div>
-              </div>
-              <div class="tree apple-tree"><img class="tree-sprite" src="apple-tree.png" alt="" draggable="false" /></div>
-              <div class="grass grass-back"></div><div class="grass grass-front"></div><div class="farm-sign">APPLE<br /><small>ORCHARD</small></div>
-              <div class="rope-origin" aria-hidden="true"></div><div class="miner-rope" id="miner-rope"><div class="rope-line" id="rope-line"><button class="ring" id="ring" aria-label="点击向上发射套绳"><span></span></button></div></div>
-            </div>
-            <div class="pick-status"><span class="status-dot"></span><span id="pick-status-text">点击套索，向上套住一颗苹果</span><span class="status-hint">准备好了吗？</span></div>
-          </div>
-
-          <div class="orchard-card persimmon-card hidden" id="persimmon-world-card">
-            <div class="world-label"><span>柿子熟啦 · 16:08</span><span>PERSIMMON GARDEN</span></div>
-            <div class="orchard-copy"><span class="location-pin">⌖</span><span>拖动瓶口插到柿子后面，再长按接住。</span></div>
-            <div class="orchard-world persimmon-world">
-              <div class="pixel-cloud cloud-one"></div><div class="pixel-cloud cloud-two"></div>
-              <div class="persimmon-tree"><img class="tree-sprite persimmon-tree-sprite" src="apple-tree.png" alt="" draggable="false" /><button class="fruit persimmon-fruit persimmon-one" aria-label="柿子"></button><button class="fruit persimmon-fruit persimmon-two" aria-label="柿子"></button><button class="fruit persimmon-fruit persimmon-three" aria-label="柿子"></button></div>
-              <div class="grass grass-back"></div><div class="grass grass-front"></div><div class="farm-sign persimmon-sign">柿子<br /><small>GARDEN</small></div>
-              <button class="bottle" id="bottle" aria-label="拖动瓶子对准柿子并长按"><div class="bottle-neck"></div><div class="bottle-body"><span></span></div></button>
-            </div>
-            <div class="hold-progress"><div class="hold-progress-bar" id="hold-progress-bar"></div></div><div class="pick-status"><span class="status-dot orange"></span><span id="hold-status-text">先把瓶口插到柿子后面</span><span class="status-hint">对准后长按</span></div>
-          </div>
-
-          <div class="scene-footer"><div class="inventory-peek"><span class="tiny-basket">▰</span><span>已摘 <b id="total-picked">0</b> 个</span></div><button class="primary-button" id="to-make" disabled>去制作 <span>→</span></button></div>
-        </div>
-
-        <div class="scene scene-make" id="make-scene" hidden>
-          <img class="table-prop" src="assets/table-clean3.png" alt="" draggable="false" aria-hidden="true" />
-          <div class="scene-copy"><p class="eyebrow" id="make-kicker">第二站 · 小厨房</p><h2>调一碗果园甜品</h2><p class="scene-subtitle">把苹果和六味调料拖进碗里，或点按食材放入。</p></div>
-
-          <button class="recipe-fab" id="recipe-toggle" aria-expanded="false" aria-controls="recipe-book">配方手账</button>
-
-          <div class="make-stage">
-            <div class="bowl-zone">
-              <div class="bowl-status"><span class="status-dot orange"></span><span id="bowl-status-text" aria-live="polite">把食材拖进碗里，或点按放入</span></div>
-              <div class="bowl-drop" id="bowl-drop">
-                <div class="bowl-mix" aria-hidden="true">
-                  <div class="bowl-soup" id="bowl-soup"></div>
-                  <div class="bowl-bits" id="bowl-bits"></div>
-                </div>
-                <img class="bowl-image" src="assets/bowl.png" alt="搅拌碗" draggable="false" />
-                <span class="drop-cue">松手放入</span>
-                <span class="mix-spark mix-spark-a" aria-hidden="true">✦</span>
-                <span class="mix-spark mix-spark-b" aria-hidden="true">✦</span>
-                <span class="mix-spark mix-spark-c" aria-hidden="true">✦</span>
-              </div>
-              <div class="bowl-tally" id="bowl-tally"><span class="bowl-empty-text">碗里还是空的</span></div>
-              <div class="bowl-nearest" id="bowl-nearest"><span>灵感</span><b id="nearest-text">先放一个苹果，再加一味调料</b></div>
-            </div>
-
-            <div class="recipe-backdrop" id="recipe-backdrop" aria-hidden="true"></div>
-
-            <aside class="recipe-book" id="recipe-book" aria-label="配方手账">
-              <div class="recipe-book-head"><span>配方手账</span><small>比例越接近越成功</small></div>
-              <div class="recipe-book-list" id="recipe-hints"></div>
-              <p class="recipe-book-note">拖动或点按食材投入碗中。点按碗边的配比标签可以取出一份。</p>
-            </aside>
-
-            <div class="pantry" aria-label="食材">
-              <div class="pantry-items" id="pantry-items">
-                <button class="ingredient-card card-apple" data-ingredient="apple" type="button">
-                  <span class="ingredient-amount" data-count="apple">0</span>
-                  <span class="ingredient-thumb"><img class="plate-image" src="assets/plate.png" alt="" draggable="false" /><img class="ingredient-icon" src="assets/apple.png" alt="" draggable="false" /></span>
-                  <span class="ingredient-name">苹果</span>
-                  <span class="ingredient-role">果肉</span>
-                </button>
-                <button class="ingredient-card" data-ingredient="sugar" type="button">
-                  <span class="ingredient-amount" data-count="sugar">0</span>
-                  <span class="ingredient-thumb"><img class="plate-image" src="assets/plate.png" alt="" draggable="false" /><img class="ingredient-icon" src="assets/sugar.png" alt="" draggable="false" /></span>
-                  <span class="ingredient-name">砂糖</span>
-                  <span class="ingredient-role">甜</span>
-                </button>
-                <button class="ingredient-card" data-ingredient="salt" type="button">
-                  <span class="ingredient-amount" data-count="salt">0</span>
-                  <span class="ingredient-thumb"><img class="plate-image" src="assets/plate.png" alt="" draggable="false" /><img class="ingredient-icon" src="assets/salt.png" alt="" draggable="false" /></span>
-                  <span class="ingredient-name">盐</span>
-                  <span class="ingredient-role">咸</span>
-                </button>
-                <button class="ingredient-card" data-ingredient="cinnamon" type="button">
-                  <span class="ingredient-amount" data-count="cinnamon">0</span>
-                  <span class="ingredient-thumb"><img class="plate-image" src="assets/plate.png" alt="" draggable="false" /><img class="ingredient-icon" src="assets/cinnamon.png" alt="" draggable="false" /></span>
-                  <span class="ingredient-name">肉桂</span>
-                  <span class="ingredient-role">暖香</span>
-                </button>
-                <button class="ingredient-card" data-ingredient="lemon" type="button">
-                  <span class="ingredient-amount" data-count="lemon">0</span>
-                  <span class="ingredient-thumb"><img class="plate-image" src="assets/plate.png" alt="" draggable="false" /><img class="ingredient-icon" src="assets/lemon.png" alt="" draggable="false" /></span>
-                  <span class="ingredient-name">柠檬</span>
-                  <span class="ingredient-role">酸</span>
-                </button>
-                <button class="ingredient-card" data-ingredient="water" type="button">
-                  <span class="ingredient-amount" data-count="water">0</span>
-                  <span class="ingredient-thumb"><img class="plate-image" src="assets/plate.png" alt="" draggable="false" /><img class="ingredient-icon" src="assets/water.png" alt="" draggable="false" /></span>
-                  <span class="ingredient-name">清水</span>
-                  <span class="ingredient-role">润</span>
-                </button>
-                <button class="ingredient-card" data-ingredient="flour" type="button">
-                  <span class="ingredient-amount" data-count="flour">0</span>
-                  <span class="ingredient-thumb"><img class="plate-image" src="assets/plate.png" alt="" draggable="false" /><img class="ingredient-icon" src="assets/flour.png" alt="" draggable="false" /></span>
-                  <span class="ingredient-name">面粉</span>
-                  <span class="ingredient-role">稠</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="trash-zone" id="trash-zone" aria-hidden="true">
-            <div class="trash-can">
-              <div class="trash-lid"></div>
-              <div class="trash-body"><i></i><i></i><i></i></div>
-            </div>
-            <span class="trash-hint">松手倒进垃圾桶</span>
-          </div>
-
-          <div class="make-actions">
-            <button class="back-link" id="back-to-pick">← 回果园再摘一点</button>
-            <button class="ghost-button clear-bowl-link" id="clear-bowl" type="button">清空碗</button>
-            <button class="primary-button make-cta" id="make-action">合成甜品 <span>→</span></button>
-          </div>
-
-          <div class="mix-result hidden" id="mix-result" role="dialog" aria-modal="true" aria-labelledby="mix-result-name">
-            <div class="mix-result-backdrop" id="mix-result-backdrop"></div>
-            <div class="mix-result-card" id="mix-result-card" tabindex="-1">
-              <button class="mix-result-close" id="mix-result-close" aria-label="关闭结果">×</button>
-              <p class="mix-result-kicker" id="mix-result-kicker">合成成功</p>
-              <div class="mix-result-badge" id="mix-result-badge" aria-hidden="true">
-                <div class="result-soup" id="result-soup"></div>
-                <img class="result-bowl" src="assets/bowl.png" alt="" draggable="false" />
-                <img class="result-apple" src="assets/apple.png" alt="" draggable="false" />
-                <img class="result-food" id="result-food" src="" alt="" draggable="false" />
-              </div>
-              <h3 id="mix-result-name">苹果</h3>
-              <div class="mix-result-score"><span id="mix-result-stars">★★★</span><b id="mix-result-score">100%</b></div>
-              <p class="mix-result-desc" id="mix-result-desc"></p>
-              <div class="mix-result-ratio" id="mix-result-ratio"></div>
-              <div class="mix-result-actions">
-                <button class="ghost-button" id="mix-again">再调一碗</button>
-                <button class="primary-button" id="serve-dish">端上餐桌 <span>→</span></button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="scene scene-eat" id="eat-scene" hidden>
-          <div class="scene-copy"><p class="eyebrow">第三站 · 小餐桌</p><h2>慢慢吃，每一口都刚刚好</h2><p class="scene-subtitle">点一点食物，咬下今天的最后一口甜。</p></div>
-          <div class="eat-table" id="eat-table">
-            <div class="plate-row" id="plate-row" data-count="1"></div>
-          </div>
-          <div class="bite-panel" id="bite-panel">
-            <div class="bite-count"><b id="bites-left">4</b><span>口美味<br />还剩下</span></div>
-            <div class="bite-mid"><span class="bite-hint" id="bite-hint">点击盘子里的食物咬一口</span><div class="bite-progress"><div id="bite-progress-bar"></div></div></div>
-            <button class="back-link scene-back" id="back-to-make">← 返回制作</button>
-          </div>
-          <div class="finish-card hidden" id="finish-card"><span class="finish-icon">♥</span><div><b>光盘行动完成！</b><span>今天也有好好照顾自己</span></div><button class="small-button" id="restart-eat">再来一份</button></div>
-        </div>
-      </section>
-      <button class="game-sound" id="game-sound" type="button" aria-label="关闭背景音乐" aria-pressed="true" hidden>♪</button>
-      <div class="apple-transition" id="apple-transition" aria-hidden="true" hidden>
-        <div class="apple-transition-wash"></div>
-        <div class="apple-transition-track" id="apple-transition-track"></div>
-      </div>
-    </main>
-    <div class="toast" id="toast" role="status"></div>
-    <script src="app.js?v=54"></script>
+    <noscript>
+      <p style="position: fixed; inset: 0; display: grid; place-content: center; margin: 0; color: #fff6d8; font-size: 14px">
+        需要开启 JavaScript 才能游玩，<a href="game.html" style="color: #f1c766">点此进入</a>
+      </p>
+    </noscript>
   </body>
 </html>
-
